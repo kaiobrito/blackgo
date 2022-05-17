@@ -1,4 +1,4 @@
-package cards
+package deck
 
 type Card struct {
 	suit   CardSuit

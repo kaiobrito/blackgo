@@ -3,7 +3,7 @@ package cards
 import (
 	"fmt"
 
-	cTypes "cards/types"
+	cTypes "blackgo/deck/types"
 )
 
 // The Deck type refers to a slice of strings
