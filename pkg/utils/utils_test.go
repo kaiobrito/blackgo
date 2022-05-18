@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"fmt"
 	"reflect"
 	"testing"
 )
@@ -70,6 +71,19 @@ func TestSum(t *testing.T) {
 	output := Sum(slice, 10)
 
 	if output != 25 {
+		t.Fail()
+	}
+}
+
+func TestMap(t *testing.T) {
+	slice := []int{
+		1, 2, 3, 4, 5,
+	}
+
+	output := Map(slice, func(i int) string { return fmt.Sprintf("A%d", i) })
+	expected := []string{"A1", "A2", "A3", "A4", "A5"}
+
+	if !reflect.DeepEqual(output, expected) {
 		t.Fail()
 	}
 }
