@@ -70,6 +70,18 @@ func (b *Blackgo) Hit() {
 
 func (b *Blackgo) Stand() {
 	b.Stood = true
+	if highestValidCombination(b.DealerDeck) < 17 {
+		for {
+			newCard, newDeck := b.d.Deal(1)
+			b.DealerDeck = append(b.DealerDeck, newCard...)
+			b.d = newDeck
+
+			if highestValidCombination(b.DealerDeck) >= 17 {
+				break
+			}
+		}
+	}
+	b.checkWinner()
 }
 
 func NewBlackgoGame() Blackgo {

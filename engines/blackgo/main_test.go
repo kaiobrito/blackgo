@@ -3,6 +3,7 @@ package engine
 import (
 	deck "blackgo/deck"
 	cTypes "blackgo/deck/types"
+	"fmt"
 	"reflect"
 	"testing"
 )
@@ -130,5 +131,38 @@ func TestCheckWinnerAfterStand(t *testing.T) {
 	game.checkWinner()
 	if game.Winner != USER {
 		t.Errorf("User won. Higher score")
+	}
+}
+
+func TestStand(t *testing.T) {
+	game := NewBlackgoGame()
+	game.Start()
+
+	expected := deck.Deck{
+		cTypes.NewCard(cTypes.Spades, cTypes.C2),
+		cTypes.NewCard(cTypes.Spades, cTypes.C3),
+		cTypes.NewCard(cTypes.Spades, cTypes.C4),
+		cTypes.NewCard(cTypes.Spades, cTypes.C5),
+		cTypes.NewCard(cTypes.Spades, cTypes.C6),
+	}
+	game.Stand()
+	if !reflect.DeepEqual(expected, game.DealerDeck) {
+		t.Errorf("Dealer deck not matching")
+	}
+}
+
+func TestStandFromExistingValues(t *testing.T) {
+	game := NewBlackgoGame()
+	game.Start()
+
+	expected := deck.Deck{
+		cTypes.NewCard(cTypes.Spades, cTypes.C10),
+		cTypes.NewCard(cTypes.Spades, cTypes.C10),
+	}
+	game.DealerDeck = expected
+	game.Stand()
+	if !reflect.DeepEqual(expected, game.DealerDeck) {
+		fmt.Println(game.DealerDeck)
+		t.Errorf("Dealer deck not matching")
 	}
 }
