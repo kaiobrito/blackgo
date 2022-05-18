@@ -16,9 +16,9 @@ const (
 	C8
 	C9
 	C10
-	C11 //J
-	C12 //Q
-	C13 //K
+	CJ //J
+	CQ //Q
+	CK //K
 )
 
 func AllCardNumbers() []CardNumber {
@@ -34,9 +34,9 @@ func AllCardNumbers() []CardNumber {
 		C8,
 		C9,
 		C10,
-		C11, //J
-		C12, //Q
-		C13, //K
+		CJ, //J
+		CQ, //Q
+		CK, //K
 	}
 }
 
@@ -44,11 +44,11 @@ func (cardNumber CardNumber) Value() string {
 	switch cardNumber {
 	case CA:
 		return "A"
-	case C11:
+	case CJ:
 		return "J"
-	case C12:
+	case CQ:
 		return "Q"
-	case C13:
+	case CK:
 		return "K"
 	}
 	return strconv.Itoa(int(cardNumber))
