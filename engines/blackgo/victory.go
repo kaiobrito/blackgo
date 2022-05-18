@@ -8,13 +8,17 @@ import (
 )
 
 func checkBlackGo(d deck.Deck) bool {
-	return closestDeckValidSumCombination(d) == 21
+	return highestValidCombination(d) == 21
+}
+
+func isOutOfPlay(d deck.Deck) bool {
+	return highestValidCombination(d) > 21
 }
 
 /**
 Return the highest valid sum of the deck
 */
-func closestDeckValidSumCombination(d deck.Deck) int {
+func highestValidCombination(d deck.Deck) int {
 	combinations := allDeckSumCombinations(d)
 	sort.Ints(combinations)
 

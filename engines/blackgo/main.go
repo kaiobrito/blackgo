@@ -7,15 +7,18 @@ import (
 type BlackGoWinner int64
 
 const (
-	USER BlackGoWinner = iota
+	NOONE BlackGoWinner = -1
+	USER                = iota
 	DEALER
+	TIE
 )
 
 type Blackgo struct {
 	d          deck.Deck
 	UserDeck   deck.Deck
 	DealerDeck deck.Deck
-	Winner     *BlackGoWinner
+	Winner     BlackGoWinner
+	Stood      bool
 }
 
 func (b *Blackgo) Start() {
@@ -25,9 +28,19 @@ func (b *Blackgo) Start() {
 	dealerDeck, newDeck := newDeck.Deal(2)
 	b.DealerDeck = dealerDeck
 	b.d = newDeck
+	b.checkWinner()
 }
 
 func (b *Blackgo) checkWinner() {
+	if highestValidCombination(b.UserDeck) == highestValidCombination(b.DealerDeck) && b.Stood {
+		b.Winner = TIE
+	} else if isOutOfPlay(b.UserDeck) {
+		b.Winner = DEALER
+	} else if checkBlackGo(b.UserDeck) {
+		b.Winner = USER
+	} else {
+		b.Winner = NOONE
+	}
 
 }
 
@@ -40,5 +53,11 @@ func (b *Blackgo) Stand() {
 }
 
 func NewBlackgoGame() Blackgo {
-	return Blackgo{d: deck.GenerateDeck()}
+	return Blackgo{
+		d:          deck.GenerateDeck(),
+		UserDeck:   nil,
+		DealerDeck: nil,
+		Winner:     NOONE,
+		Stood:      false,
+	}
 }
