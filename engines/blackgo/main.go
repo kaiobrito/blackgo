@@ -13,6 +13,19 @@ const (
 	TIE
 )
 
+func (winner BlackGoWinner) ToString() string {
+	switch winner {
+	case USER:
+		return "User"
+	case DEALER:
+		return "Dealer"
+	case TIE:
+		return "Tie"
+	default:
+		return "Game still running"
+	}
+}
+
 type Blackgo struct {
 	d          deck.Deck
 	UserDeck   deck.Deck
@@ -45,7 +58,10 @@ func (b *Blackgo) checkWinner() {
 }
 
 func (b *Blackgo) Hit() {
-
+	newCard, newDeck := b.d.Deal(1)
+	b.UserDeck = append(b.UserDeck, newCard...)
+	b.d = newDeck
+	b.checkWinner()
 }
 
 func (b *Blackgo) Stand() {

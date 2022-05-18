@@ -33,6 +33,25 @@ func TestStartGame(t *testing.T) {
 	}
 }
 
+func TestHit(t *testing.T) {
+	game := NewBlackgoGame()
+	game.Start()
+
+	expected := deck.Deck{
+		cTypes.NewCard(cTypes.Spades, cTypes.CA),
+		cTypes.NewCard(cTypes.Spades, cTypes.C1),
+		cTypes.NewCard(cTypes.Spades, cTypes.C4),
+	}
+	game.Hit()
+	if !reflect.DeepEqual(expected, game.UserDeck) {
+		t.Errorf("User hand doesn't match")
+	}
+	game.Hit()
+	if game.Winner != USER {
+		t.Errorf("User Has blackgo")
+	}
+}
+
 func TestCheckWinner(t *testing.T) {
 	game := NewBlackgoGame()
 	game.Start()
