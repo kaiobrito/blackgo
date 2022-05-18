@@ -1,18 +1,22 @@
 package deck
 
 import (
-	"fmt"
-
 	cTypes "blackgo/deck/types"
+	"blackgo/utils"
+	"fmt"
 )
 
 // The Deck type refers to a slice of strings
 type Deck []cTypes.Card
 
 func (deck Deck) Print() {
-	for _, card := range deck {
-		fmt.Println(card.ToString())
-	}
+	fmt.Println(deck.ToString())
+}
+
+func (deck Deck) ToString() string {
+	return utils.Reduce(deck, func(o string, t cTypes.Card) string {
+		return o + t.ToString() + "\n"
+	}, "")
 }
 
 func (deck Deck) Deal(handsize int) (Deck, Deck) {

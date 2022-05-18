@@ -30,8 +30,7 @@ func main() {
 		}
 		fmt.Println("---------------------")
 		fmt.Println("Dealer's cards")
-		fmt.Println(game.DealerDeck[0].ToString())
-		fmt.Println("* of *")
+		game.DealerDeckAsString()
 
 		fmt.Print("\n---------------------\n\n\n")
 		fmt.Println("Type:")
@@ -55,7 +54,7 @@ func main() {
 			game.UserDeck.Print()
 
 			fmt.Println("Dealer deck: ")
-			game.DealerDeck.Print()
+			game.DealerDeckAsString()
 			break
 		}
 	}

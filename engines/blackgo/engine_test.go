@@ -28,7 +28,7 @@ func TestStartGame(t *testing.T) {
 		cTypes.NewCard(cTypes.Spades, cTypes.C3),
 	}
 
-	if !reflect.DeepEqual(expectedDealer, game.DealerDeck) {
+	if !reflect.DeepEqual(expectedDealer, game.dealerDeck) {
 		t.Errorf("Dealer hand doesn't match")
 	}
 }
@@ -81,7 +81,7 @@ func TestCheckWinner(t *testing.T) {
 		cTypes.NewCard(cTypes.Spades, cTypes.C10),
 	}
 
-	game.DealerDeck = deck.Deck{
+	game.dealerDeck = deck.Deck{
 		cTypes.NewCard(cTypes.Spades, cTypes.CA),
 		cTypes.NewCard(cTypes.Spades, cTypes.C10),
 	}
@@ -109,7 +109,7 @@ func TestCheckWinnerAfterStand(t *testing.T) {
 		cTypes.NewCard(cTypes.Spades, cTypes.CA),
 		cTypes.NewCard(cTypes.Spades, cTypes.C5),
 	}
-	game.DealerDeck = deck.Deck{
+	game.dealerDeck = deck.Deck{
 		cTypes.NewCard(cTypes.Spades, cTypes.C10),
 		cTypes.NewCard(cTypes.Spades, cTypes.C10),
 	}
@@ -119,7 +119,7 @@ func TestCheckWinnerAfterStand(t *testing.T) {
 		t.Errorf("Dealer won. Higher score")
 	}
 
-	game.DealerDeck = deck.Deck{
+	game.dealerDeck = deck.Deck{
 		cTypes.NewCard(cTypes.Spades, cTypes.CA),
 		cTypes.NewCard(cTypes.Spades, cTypes.C5),
 	}
@@ -137,7 +137,7 @@ func TestDealerOutOfPlay(t *testing.T) {
 	game := NewBlackgoGame()
 	game.Start()
 	game.Stood = true
-	game.DealerDeck = deck.Deck{
+	game.dealerDeck = deck.Deck{
 		cTypes.NewCard(cTypes.Spades, cTypes.C6),
 		cTypes.NewCard(cTypes.Spades, cTypes.C10),
 		cTypes.NewCard(cTypes.Spades, cTypes.C8),
@@ -165,7 +165,7 @@ func TestStand(t *testing.T) {
 		cTypes.NewCard(cTypes.Spades, cTypes.C6),
 	}
 	game.Stand()
-	if !reflect.DeepEqual(expected, game.DealerDeck) {
+	if !reflect.DeepEqual(expected, game.dealerDeck) {
 		t.Errorf("Dealer deck not matching")
 	}
 }
@@ -178,9 +178,9 @@ func TestStandFromExistingValues(t *testing.T) {
 		cTypes.NewCard(cTypes.Spades, cTypes.C10),
 		cTypes.NewCard(cTypes.Spades, cTypes.C10),
 	}
-	game.DealerDeck = expected
+	game.dealerDeck = expected
 	game.Stand()
-	if !reflect.DeepEqual(expected, game.DealerDeck) {
+	if !reflect.DeepEqual(expected, game.dealerDeck) {
 		t.Errorf("Dealer deck not matching")
 	}
 }
