@@ -35,3 +35,29 @@ func TestSeparate(t *testing.T) {
 		t.Fail()
 	}
 }
+
+func TestReduce(t *testing.T) {
+	slice := []string{
+		"foo",
+		"bar",
+		"foo",
+	}
+
+	output := Reduce(slice, func(previous string, newValue string) string { return previous + newValue }, "abc")
+
+	if output != "abcfoobarfoo" {
+		t.Fail()
+	}
+}
+
+func TestReduceSum(t *testing.T) {
+	slice := []int{
+		1, 2, 3, 4, 5,
+	}
+
+	output := Reduce(slice, func(previous int, newValue int) int { return previous + newValue }, 10)
+
+	if output != 25 {
+		t.Fail()
+	}
+}

@@ -17,3 +17,11 @@ func Separate[T any](slice []T, predicate func(T) bool) ([]T, []T) {
 
 	return selected, removed
 }
+
+func Reduce[T any, O any](slice []T, predicate func(O, T) O, intialValue O) O {
+	output := intialValue
+	for _, item := range slice {
+		output = predicate(output, item)
+	}
+	return output
+}
