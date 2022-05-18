@@ -13,7 +13,7 @@ var game engine.Blackgo
 func main() {
 
 	fmt.Println("Welcome to Blackgo!")
-	game = engine.NewBlackgoGame()
+	game = engine.NewBlackgoGameWithShuffler(engine.DefaultShuffler())
 
 	reader := bufio.NewReader(os.Stdin)
 
@@ -62,6 +62,11 @@ func main() {
 
 		if game.Winner != engine.NOONE {
 			fmt.Println("The winner is: " + game.Winner.ToString())
+			fmt.Println("User deck: ")
+			game.UserDeck.Print()
+
+			fmt.Println("Dealer deck: ")
+			game.DealerDeck.Print()
 			break
 		}
 	}
