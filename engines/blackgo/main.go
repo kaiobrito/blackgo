@@ -32,9 +32,11 @@ type Blackgo struct {
 	DealerDeck deck.Deck
 	Winner     BlackGoWinner
 	Stood      bool
+	Shuffler   IShuffler
 }
 
 func (b *Blackgo) Start() {
+	b.d = b.Shuffler(b.d)
 	userDeck, newDeck := b.d.Deal(2)
 	b.UserDeck = userDeck
 
@@ -91,5 +93,17 @@ func NewBlackgoGame() Blackgo {
 		DealerDeck: nil,
 		Winner:     NOONE,
 		Stood:      false,
+		Shuffler:   NoShuffler(),
+	}
+}
+
+func NewBlackgoGameWithShuffler(shuffler IShuffler) Blackgo {
+	return Blackgo{
+		d:          deck.GenerateDeck(),
+		UserDeck:   nil,
+		DealerDeck: nil,
+		Winner:     NOONE,
+		Stood:      false,
+		Shuffler:   shuffler,
 	}
 }

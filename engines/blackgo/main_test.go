@@ -3,7 +3,6 @@ package engine
 import (
 	deck "blackgo/deck"
 	cTypes "blackgo/deck/types"
-	"fmt"
 	"reflect"
 	"testing"
 )
@@ -162,7 +161,19 @@ func TestStandFromExistingValues(t *testing.T) {
 	game.DealerDeck = expected
 	game.Stand()
 	if !reflect.DeepEqual(expected, game.DealerDeck) {
-		fmt.Println(game.DealerDeck)
 		t.Errorf("Dealer deck not matching")
+	}
+}
+
+func TestShuffler(t *testing.T) {
+	called := false
+	var shuffler IShuffler = func(d deck.Deck) deck.Deck {
+		called = true
+		return d
+	}
+	game := NewBlackgoGameWithShuffler(shuffler)
+	game.Start()
+	if !called {
+		t.Errorf("Deck not shuffled")
 	}
 }
