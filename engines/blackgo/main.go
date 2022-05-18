@@ -51,6 +51,10 @@ func (b *Blackgo) checkWinner() {
 		b.Winner = DEALER
 	} else if checkBlackGo(b.UserDeck) {
 		b.Winner = USER
+	} else if highestValidCombination(b.UserDeck) > highestValidCombination(b.DealerDeck) && b.Stood {
+		b.Winner = USER
+	} else if highestValidCombination(b.UserDeck) < highestValidCombination(b.DealerDeck) && b.Stood {
+		b.Winner = DEALER
 	} else {
 		b.Winner = NOONE
 	}
@@ -65,7 +69,7 @@ func (b *Blackgo) Hit() {
 }
 
 func (b *Blackgo) Stand() {
-
+	b.Stood = true
 }
 
 func NewBlackgoGame() Blackgo {

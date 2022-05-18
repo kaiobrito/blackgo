@@ -101,3 +101,34 @@ func TestCheckWinner(t *testing.T) {
 		t.Errorf("The game was tied")
 	}
 }
+
+func TestCheckWinnerAfterStand(t *testing.T) {
+	game := NewBlackgoGame()
+	game.Start()
+	game.UserDeck = deck.Deck{
+		cTypes.NewCard(cTypes.Spades, cTypes.CA),
+		cTypes.NewCard(cTypes.Spades, cTypes.C5),
+	}
+	game.DealerDeck = deck.Deck{
+		cTypes.NewCard(cTypes.Spades, cTypes.C10),
+		cTypes.NewCard(cTypes.Spades, cTypes.C10),
+	}
+	game.Stood = true
+	game.checkWinner()
+	if game.Winner != DEALER {
+		t.Errorf("Dealer won. Higher score")
+	}
+
+	game.DealerDeck = deck.Deck{
+		cTypes.NewCard(cTypes.Spades, cTypes.CA),
+		cTypes.NewCard(cTypes.Spades, cTypes.C5),
+	}
+	game.UserDeck = deck.Deck{
+		cTypes.NewCard(cTypes.Spades, cTypes.C10),
+		cTypes.NewCard(cTypes.Spades, cTypes.C10),
+	}
+	game.checkWinner()
+	if game.Winner != USER {
+		t.Errorf("User won. Higher score")
+	}
+}
