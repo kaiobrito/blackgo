@@ -10,3 +10,10 @@ func Filter[T any](slice []T, predicate func(T) bool) []T {
 	}
 	return newSlice
 }
+
+func Separate[T any](slice []T, predicate func(T) bool) ([]T, []T) {
+	selected := Filter(slice, predicate)
+	removed := Filter(slice, func(t T) bool { return !predicate(t) })
+
+	return selected, removed
+}
