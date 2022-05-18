@@ -1,9 +1,17 @@
 go 1.18
 
+// Apps
 use (
 	./apps/cli
 )
 
+// Packages
 use (
 	./pkg/deck
+)
+
+//Engines
+
+use (
+	./engines/blackgo
 )
