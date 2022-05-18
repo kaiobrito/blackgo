@@ -1,8 +1,8 @@
 package deck
 
 type Card struct {
-	suit   CardSuit
-	number CardNumber
+	Suit   CardSuit
+	Number CardNumber
 }
 
 func NewCard(suit CardSuit, number CardNumber) Card {
@@ -10,5 +10,5 @@ func NewCard(suit CardSuit, number CardNumber) Card {
 }
 
 func (card Card) ToString() string {
-	return card.number.Value() + " of " + card.suit.Value()
+	return card.Number.Value() + " of " + card.Suit.Value()
 }
