@@ -1,4 +1,4 @@
-package cards
+package deck
 
 import (
 	"fmt"
@@ -13,6 +13,10 @@ func (deck Deck) Print() {
 	for _, card := range deck {
 		fmt.Println(card.ToString())
 	}
+}
+
+func (deck Deck) Deal(handsize int) (Deck, Deck) {
+	return deck[:handsize], deck[handsize:]
 }
 
 func GenerateDeck() Deck {
