@@ -61,3 +61,15 @@ func TestReduceSum(t *testing.T) {
 		t.Fail()
 	}
 }
+
+func TestSum(t *testing.T) {
+	slice := []int{
+		1, 2, 3, 4, 5,
+	}
+
+	output := Sum(slice, 10)
+
+	if output != 25 {
+		t.Fail()
+	}
+}

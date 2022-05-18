@@ -25,3 +25,7 @@ func Reduce[T any, O any](slice []T, predicate func(O, T) O, intialValue O) O {
 	}
 	return output
 }
+
+func Sum(slices []int, initialValue int) int {
+	return Reduce(slices, func(o int, t int) int { return o + t }, initialValue)
+}
