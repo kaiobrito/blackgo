@@ -21,6 +21,14 @@ jobs:
 
       - name: Run tests
         run: |
-          go test blackgo/deck
-          go test blackgo/engine
-          go test blackgo/utils
+          mkdir coverage/
+          go test blackgo/deck -race -covermode=atomic -coverprofile=coverage/deck.out
+          go test blackgo/engine -race -covermode=atomic -coverprofile=coverage/engine.out
+          go test blackgo/utils -race -covermode=atomic -coverprofile=coverage/utils.out
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v2
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          directory: ./coverage/
+          verbose: true
