@@ -17,21 +17,9 @@ func main() {
 
 	reader := bufio.NewReader(os.Stdin)
 
-	fmt.Println("---------------------")
-	fmt.Println("Type:")
-	fmt.Println("1: To start a new Game")
-	fmt.Println("2: Finish the came")
-
-	text, _ := reader.ReadString('\n')
-	text = strings.Replace(text, "\n", "", -1)
-
-	if text != "1" {
-		return
-	}
-
 	game.Start()
 	fmt.Println("New game has started!")
-	fmt.Println("---------------------")
+	fmt.Print("---------------------\n\n\n")
 
 	for {
 
@@ -50,7 +38,7 @@ func main() {
 		fmt.Println("1: To hit")
 		fmt.Println("2: To stand")
 
-		text, _ = reader.ReadString('\n')
+		text, _ := reader.ReadString('\n')
 		text = strings.Replace(text, "\n", "", -1)
 
 		if text == "1" {
@@ -61,6 +49,7 @@ func main() {
 		}
 
 		if game.Winner != engine.NOONE {
+			fmt.Print("\n---------------------\n\n\n")
 			fmt.Println("The winner is: " + game.Winner.ToString())
 			fmt.Println("User deck: ")
 			game.UserDeck.Print()
