@@ -133,6 +133,26 @@ func TestCheckWinnerAfterStand(t *testing.T) {
 	}
 }
 
+func TestDealerOutOfPlay(t *testing.T) {
+	game := NewBlackgoGame()
+	game.Start()
+	game.Stood = true
+	game.DealerDeck = deck.Deck{
+		cTypes.NewCard(cTypes.Spades, cTypes.C6),
+		cTypes.NewCard(cTypes.Spades, cTypes.C10),
+		cTypes.NewCard(cTypes.Spades, cTypes.C8),
+	}
+	game.UserDeck = deck.Deck{
+		cTypes.NewCard(cTypes.Spades, cTypes.C4),
+		cTypes.NewCard(cTypes.Spades, cTypes.CK),
+		cTypes.NewCard(cTypes.Spades, cTypes.C6),
+	}
+	game.checkWinner()
+	if game.Winner != USER {
+		t.Errorf("User won. Dealer is out of play")
+	}
+}
+
 func TestStand(t *testing.T) {
 	game := NewBlackgoGame()
 	game.Start()

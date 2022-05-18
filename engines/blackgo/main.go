@@ -51,6 +51,8 @@ func (b *Blackgo) checkWinner() {
 		b.Winner = TIE
 	} else if isOutOfPlay(b.UserDeck) {
 		b.Winner = DEALER
+	} else if isOutOfPlay(b.DealerDeck) && b.Stood {
+		b.Winner = USER
 	} else if checkBlackGo(b.UserDeck) {
 		b.Winner = USER
 	} else if highestValidCombination(b.UserDeck) > highestValidCombination(b.DealerDeck) && b.Stood {
