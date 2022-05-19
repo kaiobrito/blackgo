@@ -24,11 +24,12 @@ jobs:
           mkdir coverage/
           go test blackgo/deck -race -covermode=atomic -coverprofile=coverage/deck.out
           go test blackgo/engine -race -covermode=atomic -coverprofile=coverage/engine.out
+          go test blackgo/api -race -covermode=atomic -coverprofile=coverage/api.out
           go test blackgo/utils -race -covermode=atomic -coverprofile=coverage/utils.out
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v2
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          files: ./coverage/deck.out,./coverage/engine.out,./coverage/utils.out
+          files: ./coverage/deck.out,./coverage/engine.out,./coverage/utils.out,./coverage/api.out
           verbose: true
