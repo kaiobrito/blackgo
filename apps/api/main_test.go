@@ -37,7 +37,7 @@ func TestPingEndpoint(t *testing.T) {
 }
 
 func TestNewGameEndpoint(t *testing.T) {
-	w := perfomRequest("GET", "/api/v1/game/new", nil)
+	w := perfomRequest("GET", "/api/v1/game", nil)
 	assert.Equal(t, w.Code, http.StatusPermanentRedirect)
 	assert.Regexp(t, "/api/v1/game/*", w.Header().Get("Location"))
 }
