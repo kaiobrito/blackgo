@@ -5,7 +5,12 @@ import (
 
 	"github.com/gin-gonic/gin"
 
+	swaggerfiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
+
 	controllers "blackgo/api/controllers"
+
+	docs "blackgo/api/docs"
 )
 
 // @title           Swagger Example API
@@ -20,7 +25,7 @@ import (
 // @license.name  Apache 2.0
 // @license.url   http://www.apache.org/licenses/LICENSE-2.0.html
 
-// @host  localhost:8080
+// @host      localhost:8080
 // @BasePath  /api/v1
 func main() {
 	r := setupRouter()
@@ -30,6 +35,8 @@ func main() {
 
 func setupRouter() *gin.Engine {
 	r := gin.Default()
+	docs.SwaggerInfo.BasePath = "/api/v1"
+
 	r.GET("/ping", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
 			"message": "pong",
@@ -45,5 +52,6 @@ func setupRouter() *gin.Engine {
 		}
 	}
 
+	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 	return r
 }

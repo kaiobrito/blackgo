@@ -14,7 +14,7 @@ import (
 // @Accept   json
 // @Produce  json
 // @Success  308
-// @Router   /api/v1/game/new [get]
+// @Router   /game [get]
 func NewGame(c *gin.Context) {
 	url := "/api/v1/game/" + uuid.NewString()
 	fmt.Println(url)
@@ -22,12 +22,14 @@ func NewGame(c *gin.Context) {
 }
 
 // Open Game godoc
+// @Description  Get game by ID
+// @Param        id   path      string  true  "Game ID"
 // @Summary  See game details
 // @Tags     blackgo
 // @Accept   json
 // @Produce  json
 // @Success  200
-// @Router   /api/v1/game/:id [get]
+// @Router   /game/:id [get]
 func GameDetail(c *gin.Context) {
 	id := c.Param("id")
 	game := games[id]
