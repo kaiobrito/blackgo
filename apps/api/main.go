@@ -1,7 +1,6 @@
 package main
 
 import (
-	"blackgo/engine"
 	"fmt"
 	"net/http"
 
@@ -9,10 +8,10 @@ import (
 	"github.com/google/uuid"
 )
 
-var games map[string]*engine.Blackgo
+
+// @title           Swagger Example API
 
 func main() {
-	games = map[string]*engine.Blackgo{}
 
 	r := setupRouter()
 	r.SetTrustedProxies([]string{"localhost"})
