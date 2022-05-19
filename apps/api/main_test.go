@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -30,7 +29,7 @@ func TestPingEndpoint(t *testing.T) {
 
 	var response map[string]string
 	err := json.Unmarshal(w.Body.Bytes(), &response)
-	fmt.Println(response)
+
 	assert.Nil(t, err)
 
 	if !reflect.DeepEqual(response, map[string]string{
@@ -38,5 +37,10 @@ func TestPingEndpoint(t *testing.T) {
 	}) {
 		t.Errorf("Not pong")
 	}
+}
 
+func TestNewGameEndpoint(t *testing.T) {
+	w := perfomRequest("GET", "/game/new", nil)
+	assert.Equal(t, w.Code, http.StatusPermanentRedirect)
+	assert.Regexp(t, "/game/*", w.Header().Get("Location"))
 }

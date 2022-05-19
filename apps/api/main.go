@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 )
 
 func main() {
@@ -20,5 +21,10 @@ func setupRouter() *gin.Engine {
 			"message": "pong",
 		})
 	})
+
+	r.GET("/game/new", func(c *gin.Context) {
+		c.Redirect(http.StatusPermanentRedirect, "/game/"+uuid.New().String())
+	})
+
 	return r
 }
