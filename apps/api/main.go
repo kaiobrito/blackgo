@@ -1,13 +1,19 @@
 package main
 
 import (
+	"blackgo/engine"
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 )
 
+var games map[string]*engine.Blackgo
+
 func main() {
+	games = map[string]*engine.Blackgo{}
+
 	r := setupRouter()
 	r.SetTrustedProxies([]string{"localhost"})
 	r.Run()
@@ -24,6 +30,21 @@ func setupRouter() *gin.Engine {
 
 	r.GET("/game/new", func(c *gin.Context) {
 		c.Redirect(http.StatusPermanentRedirect, "/game/"+uuid.New().String())
+	})
+
+	r.GET("/game/:id", func(c *gin.Context) {
+		id := c.Param("id")
+		game := games[id]
+		if game == nil {
+			fmt.Println("New game created at", id)
+			newGame := CreateGame()
+			games[id] = &newGame
+			game = &newGame
+
+			game.Start()
+		}
+
+		c.JSON(http.StatusOK, gin.H(game.JSON()))
 	})
 
 	return r
