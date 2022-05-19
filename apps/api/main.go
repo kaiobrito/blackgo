@@ -7,6 +7,12 @@ import (
 )
 
 func main() {
+	r := setupRouter()
+	r.SetTrustedProxies([]string{"localhost"})
+	r.Run()
+}
+
+func setupRouter() *gin.Engine {
 	r := gin.Default()
 
 	r.GET("/ping", func(c *gin.Context) {
@@ -14,5 +20,5 @@ func main() {
 			"message": "pong",
 		})
 	})
-	r.Run()
+	return r
 }
