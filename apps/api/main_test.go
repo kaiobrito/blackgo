@@ -5,7 +5,6 @@ import (
 	"io"
 	"net/http"
 	"net/http/httptest"
-	"reflect"
 	"testing"
 
 	"github.com/gin-gonic/gin"
@@ -31,12 +30,10 @@ func TestPingEndpoint(t *testing.T) {
 	err := json.Unmarshal(w.Body.Bytes(), &response)
 
 	assert.Nil(t, err)
-
-	if !reflect.DeepEqual(response, map[string]string{
+	assert.Equal(t, response, map[string]string{
 		"message": "pong",
-	}) {
-		t.Errorf("Not pong")
-	}
+	})
+
 }
 
 func TestNewGameEndpoint(t *testing.T) {
