@@ -1,18 +1,28 @@
 package main
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
+
+	controllers "blackgo/api/controllers"
 )
 
-
 // @title           Swagger Example API
+// @version         1.0
+// @description     This is a sample server celler server.
+// @termsOfService  http://swagger.io/terms/
 
+// @contact.name   API Support
+// @contact.url    http://www.swagger.io/support
+// @contact.email  support@swagger.io
+
+// @license.name  Apache 2.0
+// @license.url   http://www.apache.org/licenses/LICENSE-2.0.html
+
+// @host  localhost:8080
+// @BasePath  /api/v1
 func main() {
-
 	r := setupRouter()
 	r.SetTrustedProxies([]string{"localhost"})
 	r.Run()
@@ -20,31 +30,21 @@ func main() {
 
 func setupRouter() *gin.Engine {
 	r := gin.Default()
-
 	r.GET("/ping", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
 			"message": "pong",
 		})
 	})
+	v1 := r.Group("/api/v1")
+	{
+		game := v1.Group("/game")
+		{
 
-	r.GET("/game/new", func(c *gin.Context) {
-		c.Redirect(http.StatusPermanentRedirect, "/game/"+uuid.New().String())
-	})
+			game.GET("/new", controllers.NewGame)
 
-	r.GET("/game/:id", func(c *gin.Context) {
-		id := c.Param("id")
-		game := games[id]
-		if game == nil {
-			fmt.Println("New game created at", id)
-			newGame := CreateGame()
-			games[id] = &newGame
-			game = &newGame
-
-			game.Start()
+			game.GET("/:id", controllers.GameDetail)
 		}
-
-		c.JSON(http.StatusOK, gin.H(game.JSON()))
-	})
+	}
 
 	return r
 }
