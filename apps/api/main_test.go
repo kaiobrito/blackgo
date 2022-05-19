@@ -12,12 +12,12 @@ import (
 )
 
 func perfomRequest(method string, path string, body io.Reader) *httptest.ResponseRecorder {
+	gin.SetMode(gin.TestMode)
 	router := setupRouter()
 	w := httptest.NewRecorder()
 	req, _ := http.NewRequest(method, path, body)
 	router.ServeHTTP(w, req)
 	gin.DisableConsoleColor()
-	gin.SetMode(gin.TestMode)
 	return w
 }
 
