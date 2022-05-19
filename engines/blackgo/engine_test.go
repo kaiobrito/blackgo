@@ -5,6 +5,8 @@ import (
 	cTypes "blackgo/deck/types"
 	"reflect"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestStartGame(t *testing.T) {
@@ -31,6 +33,38 @@ func TestStartGame(t *testing.T) {
 	if !reflect.DeepEqual(expectedDealer, game.dealerDeck) {
 		t.Errorf("Dealer hand doesn't match")
 	}
+}
+
+func TestJson(t *testing.T) {
+	game := NewBlackgoGame()
+	game.Start()
+	assert.Equal(t, game.JSON(), map[string]any{
+		"user": map[string]any{
+			"cards": []map[string]string{
+				{
+					"number": cTypes.CA.Value(),
+					"suit":   cTypes.Spades.Value(),
+				},
+				{
+					"number": cTypes.C1.Value(),
+					"suit":   cTypes.Spades.Value(),
+				},
+			},
+		},
+		"dealer": map[string]any{
+			"cards": []map[string]string{
+				{
+					"number": cTypes.C2.Value(),
+					"suit":   cTypes.Spades.Value(),
+				},
+				{
+					"number": cTypes.C3.Value(),
+					"suit":   cTypes.Spades.Value(),
+				},
+			},
+		},
+		"winner": NOONE,
+	})
 }
 
 func TestHit(t *testing.T) {

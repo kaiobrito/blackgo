@@ -63,6 +63,14 @@ func (b *Blackgo) checkWinner() {
 
 }
 
+func (b Blackgo) JSON() map[string]any {
+	return map[string]any{
+		"user":   b.UserDeck.Json(),
+		"dealer": b.dealerDeck.Json(),
+		"winner": b.Winner,
+	}
+}
+
 func (b *Blackgo) Hit() {
 	newCard, newDeck := b.d.Deal(1)
 	b.UserDeck = append(b.UserDeck, newCard...)
