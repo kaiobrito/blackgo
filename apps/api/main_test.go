@@ -7,6 +7,7 @@ import (
 	"io"
 	"net/http"
 	"net/http/httptest"
+	"reflect"
 	"testing"
 
 	"github.com/gin-gonic/gin"
@@ -48,11 +49,16 @@ func TestPingEndpoint(t *testing.T) {
 
 func TestNewGameEndpoint(t *testing.T) {
 	teardownSuite := setupSuite(t)
-	defer teardownSuite(t)
+	teardownSuite(t)
 
-	w := perfomRequest("GET", "/api/v1/game", nil)
-	assert.Equal(t, w.Code, http.StatusPermanentRedirect)
-	assert.Regexp(t, "/api/v1/game/*", w.Header().Get("Location"))
+	w := perfomRequest("POST", "/api/v1/game", nil)
+	assert.Equal(t, w.Code, http.StatusCreated)
+
+	key := reflect.ValueOf(controllers.Games).MapKeys()[0]
+	game := controllers.Games[key.String()]
+
+	expected, _ := json.Marshal(game.JSON())
+	assert.Equal(t, string(expected), w.Body.String())
 }
 
 func TestGetGame(t *testing.T) {

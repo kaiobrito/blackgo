@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -15,10 +14,8 @@ import (
 // @Success  308
 // @Router   /game [get]
 func NewGame(c *gin.Context) {
-	newGame := CreateGame()
-	url := "/api/v1/game/" + newGame.ID
-	fmt.Println(url)
-	c.Redirect(http.StatusPermanentRedirect, url)
+	game := CreateGame()
+	c.JSON(http.StatusCreated, gin.H(game.JSON()))
 }
 
 // Open Game godoc
