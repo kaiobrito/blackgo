@@ -26,7 +26,7 @@ const docTemplate = `{
     "basePath": "{{.BasePath}}",
     "paths": {
         "/game": {
-            "get": {
+            "post": {
                 "consumes": [
                     "application/json"
                 ],
@@ -38,7 +38,7 @@ const docTemplate = `{
                 ],
                 "summary": "Create new game",
                 "responses": {
-                    "308": {
+                    "201": {
                         "description": ""
                     }
                 }

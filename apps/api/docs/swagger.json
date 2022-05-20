@@ -19,7 +19,7 @@
     "basePath": "/api/v1",
     "paths": {
         "/game": {
-            "get": {
+            "post": {
                 "consumes": [
                     "application/json"
                 ],
@@ -31,7 +31,7 @@
                 ],
                 "summary": "Create new game",
                 "responses": {
-                    "308": {
+                    "201": {
                         "description": ""
                     }
                 }

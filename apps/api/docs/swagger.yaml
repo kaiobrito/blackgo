@@ -14,13 +14,13 @@ info:
   version: "1.0"
 paths:
   /game:
-    get:
+    post:
       consumes:
       - application/json
       produces:
       - application/json
       responses:
-        "308":
+        "201":
           description: ""
       summary: Create new game
       tags:

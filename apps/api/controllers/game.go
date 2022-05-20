@@ -11,8 +11,8 @@ import (
 // @Tags     blackgo
 // @Accept   json
 // @Produce  json
-// @Success  308
-// @Router   /game [get]
+// @Success  201
+// @Router   /game [post]
 func NewGame(c *gin.Context) {
 	game := CreateGame()
 	c.JSON(http.StatusCreated, gin.H(game.JSON()))
