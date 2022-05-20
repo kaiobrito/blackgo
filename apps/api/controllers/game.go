@@ -5,7 +5,6 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
 )
 
 // New Game godoc
@@ -16,7 +15,8 @@ import (
 // @Success  308
 // @Router   /game [get]
 func NewGame(c *gin.Context) {
-	url := "/api/v1/game/" + uuid.NewString()
+	newGame := CreateGame()
+	url := "/api/v1/game/" + newGame.ID
 	fmt.Println(url)
 	c.Redirect(http.StatusPermanentRedirect, url)
 }
@@ -34,12 +34,11 @@ func GameDetail(c *gin.Context) {
 	id := c.Param("id")
 	game := Games[id]
 	if game == nil {
-		fmt.Println("New game created at", id)
-		newGame := CreateGame()
-		Games[id] = &newGame
-		game = &newGame
-
-		game.Start()
+		c.JSON(http.StatusNotFound, gin.H{
+			"code":    "page_not_found",
+			"message": "Page not found",
+		})
+		return
 	}
 
 	c.JSON(http.StatusOK, gin.H(game.JSON()))

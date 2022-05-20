@@ -39,6 +39,7 @@ func TestJson(t *testing.T) {
 	game := NewBlackgoGame()
 	game.Start()
 	assert.Equal(t, game.JSON(), map[string]any{
+		"ID": game.ID,
 		"user": map[string]any{
 			"cards": []map[string]string{
 				{

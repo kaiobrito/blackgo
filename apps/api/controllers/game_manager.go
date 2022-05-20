@@ -1,11 +1,18 @@
 package controllers
 
-import "blackgo/engine"
+import (
+	"blackgo/engine"
+)
 
 var Games map[string]*engine.Blackgo
 
 func CreateGame() engine.Blackgo {
-	return engine.NewBlackgoGameWithShuffler(engine.DefaultShuffler())
+	game := engine.NewBlackgoGameWithShuffler(engine.DefaultShuffler())
+	Games[game.ID] = &game
+
+	game.Start()
+
+	return game
 }
 
 func init() {

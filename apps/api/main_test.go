@@ -55,18 +55,25 @@ func TestNewGameEndpoint(t *testing.T) {
 	assert.Regexp(t, "/api/v1/game/*", w.Header().Get("Location"))
 }
 
-func TestCreateNewGame(t *testing.T) {
+func TestGetGame(t *testing.T) {
+	teardownSuite := setupSuite(t)
+	defer teardownSuite(t)
+
+	game := controllers.CreateGame()
+
+	w := perfomRequest("GET", "/api/v1/game/"+game.ID, nil)
+	assert.Equal(t, w.Code, http.StatusOK)
+	expected, _ := json.Marshal(game.JSON())
+	assert.Equal(t, w.Body.String(), string(expected))
+}
+
+func TestAccessUnknownGame(t *testing.T) {
 	teardownSuite := setupSuite(t)
 	defer teardownSuite(t)
 
 	assert.Equal(t, len(controllers.Games), 0)
 	w := perfomRequest("GET", "/api/v1/game/1231", nil)
-	assert.Equal(t, w.Code, http.StatusOK)
-	assert.Equal(t, len(controllers.Games), 1)
-
-	game := controllers.Games["1231"]
-	assert.NotNil(t, game)
-	assert.NotNil(t, game.UserDeck)
+	assert.Equal(t, w.Code, http.StatusNotFound)
 }
 
 func TestHitUnknownGame(t *testing.T) {
