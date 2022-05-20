@@ -50,6 +50,7 @@ func setupRouter() *gin.Engine {
 			game.GET("", controllers.NewGame)
 			game.GET(":id", controllers.GameDetail)
 			game.POST(":id/hit", controllers.Hit)
+			game.POST(":id/stand", controllers.Stand)
 		}
 	}
 

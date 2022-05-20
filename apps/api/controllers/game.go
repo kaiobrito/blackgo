@@ -66,3 +66,25 @@ func Hit(c *gin.Context) {
 	}
 	game.Hit()
 }
+
+// Stand for another card godoc
+// @Description  Ask for another card
+// @Param        id   path      string  true  "Game ID"
+// @Summary  Ask for another card
+// @Tags     blackgo
+// @Accept   json
+// @Produce  json
+// @Success  200
+// @Router   /game/:id/stand [post]
+func Stand(c *gin.Context) {
+	id := c.Param("id")
+	game := Games[id]
+	if game == nil {
+		c.JSON(http.StatusNotFound, gin.H{
+			"code":    "page_not_found",
+			"message": "Page not found",
+		})
+		return
+	}
+	game.Stand()
+}

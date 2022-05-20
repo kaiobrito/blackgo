@@ -88,3 +88,18 @@ func TestHit(t *testing.T) {
 	assert.Equal(t, w.Code, http.StatusOK)
 	assert.Equal(t, len(game.UserDeck), 3)
 }
+
+func TestStand(t *testing.T) {
+	teardownSuite := setupSuite(t)
+	defer teardownSuite(t)
+
+	// Create the game
+	game := engine.NewBlackgoGame()
+	game.Start()
+	controllers.Games["1231"] = &game
+	assert.Equal(t, game.Winner, engine.NOONE)
+
+	w := perfomRequest("POST", "/api/v1/game/1231/stand", nil)
+	assert.Equal(t, w.Code, http.StatusOK)
+	assert.NotEqual(t, game.Winner, engine.NOONE)
+}
