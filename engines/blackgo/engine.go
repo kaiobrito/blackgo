@@ -1,6 +1,8 @@
 package engine
 
-import "blackgo/deck"
+import (
+	"blackgo/deck"
+)
 
 type BlackGoWinner int64
 
@@ -25,6 +27,7 @@ func (winner BlackGoWinner) ToString() string {
 }
 
 type Blackgo struct {
+	ID         string
 	d          deck.Deck
 	UserDeck   deck.Deck
 	dealerDeck deck.Deck
@@ -65,6 +68,7 @@ func (b *Blackgo) checkWinner() {
 
 func (b Blackgo) JSON() map[string]any {
 	return map[string]any{
+		"ID":     b.ID,
 		"user":   b.UserDeck.Json(),
 		"dealer": b.dealerDeck.Json(),
 		"winner": b.Winner,
