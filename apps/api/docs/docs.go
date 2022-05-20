@@ -101,6 +101,35 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/game/:id/stand": {
+            "post": {
+                "description": "Ask for another card",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "blackgo"
+                ],
+                "summary": "Ask for another card",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Game ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                }
+            }
         }
     }
 }`

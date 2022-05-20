@@ -63,4 +63,23 @@ paths:
       summary: Ask for another card
       tags:
       - blackgo
+  /game/:id/stand:
+    post:
+      consumes:
+      - application/json
+      description: Ask for another card
+      parameters:
+      - description: Game ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ""
+      summary: Ask for another card
+      tags:
+      - blackgo
 swagger: "2.0"
