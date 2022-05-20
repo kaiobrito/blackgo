@@ -45,15 +45,15 @@ func GameDetail(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H(game.JSON()))
 }
 
-// Open Game godoc
-// @Description  Get game by ID
+// Ask for another card godoc
+// @Description  Ask for another card
 // @Param        id   path      string  true  "Game ID"
-// @Summary  See game details
+// @Summary  Ask for another card
 // @Tags     blackgo
 // @Accept   json
 // @Produce  json
 // @Success  200
-// @Router   /game/:id [get]
+// @Router   /game/:id/hit [post]
 func Hit(c *gin.Context) {
 	id := c.Param("id")
 	game := Games[id]

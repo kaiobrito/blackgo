@@ -84,7 +84,7 @@ func TestHit(t *testing.T) {
 	controllers.Games["1231"] = &game
 	assert.Equal(t, len(game.UserDeck), 2)
 
-	w := perfomRequest("GET", "/api/v1/game/1231/hit", nil)
+	w := perfomRequest("POST", "/api/v1/game/1231/hit", nil)
 	assert.Equal(t, w.Code, http.StatusOK)
 	assert.Equal(t, len(game.UserDeck), 3)
 }
