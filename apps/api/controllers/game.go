@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"blackgo/engine/exceptions"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -49,18 +50,29 @@ func GameDetail(c *gin.Context) {
 // @Accept   json
 // @Produce  json
 // @Success  200
+// @Failure      400  {object}  exceptions.HTTPError
 // @Router   /game/{id}/hit [post]
 func Hit(c *gin.Context) {
 	id := c.Param("id")
 	game := Games[id]
 	if game == nil {
-		c.JSON(http.StatusNotFound, gin.H{
+		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{
 			"code":    "page_not_found",
 			"message": "Page not found",
 		})
 		return
 	}
-	game.Hit()
+
+	err := game.Hit()
+	if err != nil {
+		if err == exceptions.ErrGameIsOver {
+			c.AbortWithStatusJSON(http.StatusBadRequest, err)
+		} else {
+			c.AbortWithError(http.StatusBadRequest, err)
+		}
+		return
+	}
+
 }
 
 // Stand for another card godoc

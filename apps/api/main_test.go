@@ -102,6 +102,20 @@ func TestHit(t *testing.T) {
 	assert.Equal(t, len(game.UserDeck), 3)
 }
 
+func TestHitAfterGameIsOver(t *testing.T) {
+	teardownSuite := setupSuite(t)
+	defer teardownSuite(t)
+
+	// Create the game
+	game := engine.NewBlackgoGame()
+	game.Start()
+	game.Stand()
+	controllers.Games["1231"] = &game
+
+	w := perfomRequest("POST", "/api/v1/game/1231/hit", nil)
+	assert.Equal(t, w.Code, http.StatusBadRequest)
+}
+
 func TestStand(t *testing.T) {
 	teardownSuite := setupSuite(t)
 	defer teardownSuite(t)

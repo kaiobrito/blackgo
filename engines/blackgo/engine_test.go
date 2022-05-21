@@ -3,6 +3,7 @@ package engine
 import (
 	deck "blackgo/deck"
 	cTypes "blackgo/deck/types"
+	"blackgo/engine/exceptions"
 	"reflect"
 	"testing"
 
@@ -85,6 +86,18 @@ func TestHit(t *testing.T) {
 	if game.Winner != USER {
 		t.Errorf("User Has blackgo")
 	}
+}
+
+func TestHitAfterEnd(t *testing.T) {
+	game := NewBlackgoGame()
+	game.Start()
+	game.Stand()
+
+	assert.NotEqual(t, game.Winner, NOONE)
+	err := game.Hit()
+
+	assert.NotNil(t, err)
+	assert.Equal(t, err, exceptions.ErrGameIsOver)
 }
 
 func TestCheckWinner(t *testing.T) {

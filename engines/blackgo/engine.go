@@ -2,6 +2,7 @@ package engine
 
 import (
 	"blackgo/deck"
+	"blackgo/engine/exceptions"
 )
 
 type BlackGoWinner int64
@@ -75,11 +76,15 @@ func (b Blackgo) JSON() map[string]any {
 	}
 }
 
-func (b *Blackgo) Hit() {
+func (b *Blackgo) Hit() error {
+	if b.Winner != NOONE {
+		return exceptions.ErrGameIsOver
+	}
 	newCard, newDeck := b.d.Deal(1)
 	b.UserDeck = append(b.UserDeck, newCard...)
 	b.d = newDeck
 	b.checkWinner()
+	return nil
 }
 
 func (b *Blackgo) Stand() {
