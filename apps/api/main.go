@@ -1,7 +1,10 @@
 package main
 
 import (
+	"fmt"
 	"net/http"
+	"os"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 
@@ -29,7 +32,9 @@ import (
 // @BasePath  /api/v1
 func main() {
 	r := setupRouter()
-	r.SetTrustedProxies([]string{"localhost"})
+	trusted_proxies := os.Getenv("TRUSTED_PROXIES")
+	fmt.Println(trusted_proxies)
+	r.SetTrustedProxies(strings.Split(trusted_proxies, ","))
 	r.Run()
 }
 
