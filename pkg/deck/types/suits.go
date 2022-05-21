@@ -1,6 +1,12 @@
 package deck
 
+import "encoding/json"
+
 type CardSuit int64
+
+func (a CardSuit) MarshalJSON() ([]byte, error) {
+	return json.Marshal(a.Value())
+}
 
 const (
 	Spades CardSuit = iota

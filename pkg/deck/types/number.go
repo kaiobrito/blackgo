@@ -1,8 +1,15 @@
 package deck
 
-import "strconv"
+import (
+	"encoding/json"
+	"strconv"
+)
 
 type CardNumber int64
+
+func (a CardNumber) MarshalJSON() ([]byte, error) {
+	return json.Marshal(a.Value())
+}
 
 const (
 	CA CardNumber = iota

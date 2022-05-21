@@ -1,8 +1,8 @@
 package deck
 
 type Card struct {
-	Suit   CardSuit
-	Number CardNumber
+	Suit   CardSuit   `json:"suit" example:"spades"`
+	Number CardNumber `json:"number" example:"A"`
 }
 
 func NewCard(suit CardSuit, number CardNumber) Card {
