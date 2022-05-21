@@ -44,7 +44,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/game/:id": {
+        "/game/{id}": {
             "get": {
                 "description": "Get game by ID",
                 "consumes": [
@@ -73,7 +73,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/game/:id/hit": {
+        "/game/{id}/hit": {
             "post": {
                 "description": "Ask for another card",
                 "consumes": [
@@ -102,9 +102,9 @@ const docTemplate = `{
                 }
             }
         },
-        "/game/:id/stand": {
+        "/game/{id}/stand": {
             "post": {
-                "description": "Ask for another card",
+                "description": "Stand",
                 "consumes": [
                     "application/json"
                 ],
@@ -114,7 +114,7 @@ const docTemplate = `{
                 "tags": [
                     "blackgo"
                 ],
-                "summary": "Ask for another card",
+                "summary": "Stand",
                 "parameters": [
                     {
                         "type": "string",

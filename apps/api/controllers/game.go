@@ -26,7 +26,7 @@ func NewGame(c *gin.Context) {
 // @Accept   json
 // @Produce  json
 // @Success  200
-// @Router   /game/:id [get]
+// @Router   /game/{id} [get]
 func GameDetail(c *gin.Context) {
 	id := c.Param("id")
 	game := Games[id]
@@ -49,7 +49,7 @@ func GameDetail(c *gin.Context) {
 // @Accept   json
 // @Produce  json
 // @Success  200
-// @Router   /game/:id/hit [post]
+// @Router   /game/{id}/hit [post]
 func Hit(c *gin.Context) {
 	id := c.Param("id")
 	game := Games[id]
@@ -64,14 +64,14 @@ func Hit(c *gin.Context) {
 }
 
 // Stand for another card godoc
-// @Description  Ask for another card
+// @Description  Stand
 // @Param        id   path      string  true  "Game ID"
-// @Summary  Ask for another card
+// @Summary  Stand
 // @Tags     blackgo
 // @Accept   json
 // @Produce  json
 // @Success  200
-// @Router   /game/:id/stand [post]
+// @Router   /game/{id}/stand [post]
 func Stand(c *gin.Context) {
 	id := c.Param("id")
 	game := Games[id]

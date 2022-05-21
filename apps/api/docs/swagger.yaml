@@ -25,7 +25,7 @@ paths:
       summary: Create new game
       tags:
       - blackgo
-  /game/:id:
+  /game/{id}:
     get:
       consumes:
       - application/json
@@ -44,7 +44,7 @@ paths:
       summary: See game details
       tags:
       - blackgo
-  /game/:id/hit:
+  /game/{id}/hit:
     post:
       consumes:
       - application/json
@@ -63,11 +63,11 @@ paths:
       summary: Ask for another card
       tags:
       - blackgo
-  /game/:id/stand:
+  /game/{id}/stand:
     post:
       consumes:
       - application/json
-      description: Ask for another card
+      description: Stand
       parameters:
       - description: Game ID
         in: path
@@ -79,7 +79,7 @@ paths:
       responses:
         "200":
           description: ""
-      summary: Ask for another card
+      summary: Stand
       tags:
       - blackgo
 swagger: "2.0"
