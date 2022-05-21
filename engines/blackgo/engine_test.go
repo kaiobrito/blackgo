@@ -4,6 +4,7 @@ import (
 	deck "blackgo/deck"
 	cTypes "blackgo/deck/types"
 	"blackgo/engine/exceptions"
+	"encoding/json"
 	"reflect"
 	"testing"
 
@@ -39,34 +40,37 @@ func TestStartGame(t *testing.T) {
 func TestJson(t *testing.T) {
 	game := NewBlackgoGame()
 	game.Start()
-	assert.Equal(t, game.JSON(), map[string]any{
+
+	data, err := json.Marshal(game)
+	assert.Nil(t, err)
+
+	expected := map[string]any{
 		"ID": game.ID,
-		"user": map[string]any{
-			"cards": []map[string]string{
-				{
-					"number": cTypes.CA.Value(),
-					"suit":   cTypes.Spades.Value(),
-				},
-				{
-					"number": cTypes.C1.Value(),
-					"suit":   cTypes.Spades.Value(),
-				},
+		"user": []map[string]string{
+			{
+				"number": cTypes.CA.Value(),
+				"suit":   cTypes.Spades.Value(),
+			},
+			{
+				"number": cTypes.C1.Value(),
+				"suit":   cTypes.Spades.Value(),
 			},
 		},
-		"dealer": map[string]any{
-			"cards": []map[string]string{
-				{
-					"number": cTypes.C2.Value(),
-					"suit":   cTypes.Spades.Value(),
-				},
-				{
-					"number": cTypes.C3.Value(),
-					"suit":   cTypes.Spades.Value(),
-				},
+		"dealer": []map[string]string{
+			{
+				"suit":   cTypes.Spades.Value(),
+				"number": cTypes.C2.Value(),
+			},
+			{
+				"suit":   cTypes.Spades.Value(),
+				"number": cTypes.C3.Value(),
 			},
 		},
 		"winner": NOONE,
-	})
+	}
+	expectedData, _ := json.Marshal(expected)
+
+	assert.Equal(t, string(expectedData), string(data))
 }
 
 func TestHit(t *testing.T) {
