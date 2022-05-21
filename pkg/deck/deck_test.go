@@ -2,8 +2,11 @@ package deck
 
 import (
 	cTypes "blackgo/deck/types"
+	"encoding/json"
 	"reflect"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestDeal(t *testing.T) {
@@ -26,20 +29,20 @@ func TestJson(t *testing.T) {
 		cTypes.NewCard(cTypes.Spades, cTypes.C1),
 	}
 
-	expected := map[string]any{
-		"cards": []map[string]string{
-			{
-				"number": cTypes.CA.Value(),
-				"suit":   cTypes.Spades.Value(),
-			},
-			{
-				"number": cTypes.C1.Value(),
-				"suit":   cTypes.Spades.Value(),
-			},
+	expected := []map[string]string{
+		{
+			"number": cTypes.CA.Value(),
+			"suit":   cTypes.Spades.Value(),
+		},
+		{
+			"number": cTypes.C1.Value(),
+			"suit":   cTypes.Spades.Value(),
 		},
 	}
 
-	if !reflect.DeepEqual(expected, d.Json()) {
-		t.Error("JSON doesn't match", expected, d.Json())
-	}
+	data, _ := json.Marshal(d)
+	result := []map[string]string{}
+	json.Unmarshal(data, &result)
+
+	assert.Equal(t, expected, result)
 }

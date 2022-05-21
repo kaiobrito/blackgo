@@ -19,17 +19,6 @@ func (deck Deck) ToString() string {
 	}, "")
 }
 
-func (deck Deck) Json() map[string]any {
-	return map[string]any{
-		"cards": utils.Map(deck, func(card cTypes.Card) map[string]string {
-			return map[string]string{
-				"number": card.Number.Value(),
-				"suit":   card.Suit.Value(),
-			}
-		}),
-	}
-}
-
 func (deck Deck) Deal(handsize int) (Deck, Deck) {
 	return deck[:handsize], deck[handsize:]
 }
