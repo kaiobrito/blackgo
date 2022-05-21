@@ -57,7 +57,7 @@ func TestNewGameEndpoint(t *testing.T) {
 	key := reflect.ValueOf(controllers.Games).MapKeys()[0]
 	game := controllers.Games[key.String()]
 
-	expected, _ := json.Marshal(game.JSON())
+	expected, _ := json.Marshal(game)
 	assert.Equal(t, string(expected), w.Body.String())
 }
 
@@ -69,7 +69,7 @@ func TestGetGame(t *testing.T) {
 
 	w := perfomRequest("GET", "/api/v1/game/"+game.ID, nil)
 	assert.Equal(t, w.Code, http.StatusOK)
-	expected, _ := json.Marshal(game.JSON())
+	expected, _ := json.Marshal(game)
 	assert.Equal(t, w.Body.String(), string(expected))
 }
 

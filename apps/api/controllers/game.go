@@ -16,7 +16,7 @@ import (
 // @Router   /game [post]
 func NewGame(c *gin.Context) {
 	game := CreateGame()
-	c.JSON(http.StatusCreated, gin.H(game.JSON()))
+	c.JSON(http.StatusCreated, game)
 }
 
 // Open Game godoc
@@ -39,7 +39,7 @@ func GameDetail(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H(game.JSON()))
+	c.JSON(http.StatusOK, game)
 }
 
 // Ask for another card godoc
@@ -72,7 +72,7 @@ func Hit(c *gin.Context) {
 		}
 		return
 	}
-
+	c.JSON(http.StatusOK, game)
 }
 
 // Stand for another card godoc
@@ -95,4 +95,5 @@ func Stand(c *gin.Context) {
 		return
 	}
 	game.Stand()
+	c.JSON(http.StatusOK, game)
 }
