@@ -2,7 +2,6 @@ package repository
 
 import (
 	"blackgo/engine"
-	"fmt"
 )
 
 var games map[string]*engine.Blackgo
@@ -28,11 +27,9 @@ func GetAllGames() map[string]*engine.Blackgo {
 }
 
 func DeleteAll() {
-	fmt.Println("Deleting Data")
 	games = map[string]*engine.Blackgo{}
 }
 
 func init() {
-	fmt.Println("Initializing")
 	DeleteAll()
 }
