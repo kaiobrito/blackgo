@@ -4,32 +4,36 @@ import (
 	"blackgo/engine"
 )
 
-var games map[string]*engine.Blackgo
+type IGameRepository interface {
+	CreateGame() *engine.Blackgo
+	SaveGame(game *engine.Blackgo)
+	GetGameById(id string) *engine.Blackgo
+	GetAllGames() map[string]*engine.Blackgo
+	DeleteAll()
+}
+
+var repository IGameRepository
 
 func CreateGame() *engine.Blackgo {
-	game := engine.NewBlackgoGameWithShuffler(engine.DefaultShuffler())
-	game.Start()
-	SaveGame(&game)
-
-	return &game
+	return repository.CreateGame()
 }
 
 func SaveGame(game *engine.Blackgo) {
-	games[game.ID] = game
+	repository.SaveGame(game)
 }
 
 func GetGameById(id string) *engine.Blackgo {
-	return games[id]
+	return repository.GetGameById(id)
 }
 
 func GetAllGames() map[string]*engine.Blackgo {
-	return games
+	return repository.GetAllGames()
 }
 
 func DeleteAll() {
-	games = map[string]*engine.Blackgo{}
+	repository.DeleteAll()
 }
 
 func init() {
-	DeleteAll()
+	repository = NewInMemoryRepository()
 }
