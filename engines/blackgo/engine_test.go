@@ -32,7 +32,7 @@ func TestStartGame(t *testing.T) {
 		cTypes.NewCard(cTypes.Spades, cTypes.C3),
 	}
 
-	if !reflect.DeepEqual(expectedDealer, game.dealerDeck) {
+	if !reflect.DeepEqual(expectedDealer, game.DealerDeck) {
 		t.Errorf("Dealer hand doesn't match")
 	}
 }
@@ -48,22 +48,22 @@ func TestJson(t *testing.T) {
 		"ID": game.ID,
 		"user": []map[string]string{
 			{
-				"number": cTypes.CA.Value(),
-				"suit":   cTypes.Spades.Value(),
+				"number": string(cTypes.CA),
+				"suit":   string(cTypes.Spades),
 			},
 			{
-				"number": cTypes.C1.Value(),
-				"suit":   cTypes.Spades.Value(),
+				"number": string(cTypes.C1),
+				"suit":   string(cTypes.Spades),
 			},
 		},
 		"dealer": []map[string]string{
 			{
-				"suit":   cTypes.Spades.Value(),
-				"number": cTypes.C2.Value(),
+				"suit":   string(cTypes.Spades),
+				"number": string(cTypes.C2),
 			},
 			{
-				"suit":   cTypes.Spades.Value(),
-				"number": cTypes.C3.Value(),
+				"suit":   string(cTypes.Spades),
+				"number": string(cTypes.C3),
 			},
 		},
 		"winner": NOONE,
@@ -133,7 +133,7 @@ func TestCheckWinner(t *testing.T) {
 		cTypes.NewCard(cTypes.Spades, cTypes.C10),
 	}
 
-	game.dealerDeck = deck.Deck{
+	game.DealerDeck = deck.Deck{
 		cTypes.NewCard(cTypes.Spades, cTypes.CA),
 		cTypes.NewCard(cTypes.Spades, cTypes.C10),
 	}
@@ -161,7 +161,7 @@ func TestCheckWinnerAfterStand(t *testing.T) {
 		cTypes.NewCard(cTypes.Spades, cTypes.CA),
 		cTypes.NewCard(cTypes.Spades, cTypes.C5),
 	}
-	game.dealerDeck = deck.Deck{
+	game.DealerDeck = deck.Deck{
 		cTypes.NewCard(cTypes.Spades, cTypes.C10),
 		cTypes.NewCard(cTypes.Spades, cTypes.C10),
 	}
@@ -171,7 +171,7 @@ func TestCheckWinnerAfterStand(t *testing.T) {
 		t.Errorf("Dealer won. Higher score")
 	}
 
-	game.dealerDeck = deck.Deck{
+	game.DealerDeck = deck.Deck{
 		cTypes.NewCard(cTypes.Spades, cTypes.CA),
 		cTypes.NewCard(cTypes.Spades, cTypes.C5),
 	}
@@ -189,7 +189,7 @@ func TestDealerOutOfPlay(t *testing.T) {
 	game := NewBlackgoGame()
 	game.Start()
 	game.Stood = true
-	game.dealerDeck = deck.Deck{
+	game.DealerDeck = deck.Deck{
 		cTypes.NewCard(cTypes.Spades, cTypes.C6),
 		cTypes.NewCard(cTypes.Spades, cTypes.C10),
 		cTypes.NewCard(cTypes.Spades, cTypes.C8),
@@ -217,7 +217,7 @@ func TestStand(t *testing.T) {
 		cTypes.NewCard(cTypes.Spades, cTypes.C6),
 	}
 	game.Stand()
-	if !reflect.DeepEqual(expected, game.dealerDeck) {
+	if !reflect.DeepEqual(expected, game.DealerDeck) {
 		t.Errorf("Dealer deck not matching")
 	}
 }
@@ -230,9 +230,9 @@ func TestStandFromExistingValues(t *testing.T) {
 		cTypes.NewCard(cTypes.Spades, cTypes.C10),
 		cTypes.NewCard(cTypes.Spades, cTypes.C10),
 	}
-	game.dealerDeck = expected
+	game.DealerDeck = expected
 	game.Stand()
-	if !reflect.DeepEqual(expected, game.dealerDeck) {
+	if !reflect.DeepEqual(expected, game.DealerDeck) {
 		t.Errorf("Dealer deck not matching")
 	}
 }

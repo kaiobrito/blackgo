@@ -29,26 +29,26 @@ func (winner BlackGoWinner) ToString() string {
 }
 
 type Blackgo struct {
-	ID         string `json:"ID" example:"foobar"`
-	d          deck.Deck
-	UserDeck   deck.Deck `json:"user" `
-	dealerDeck deck.Deck
+	ID         string        `json:"ID" example:"foobar"`
+	d          deck.Deck     `json:"-"`
+	UserDeck   deck.Deck     `json:"user" `
+	DealerDeck deck.Deck     `json:"dealer" `
 	Winner     BlackGoWinner `json:"winner" `
-	Stood      bool
-	Shuffler   IShuffler `json:"-"`
+	Stood      bool          `json:"stood" `
+	Shuffler   IShuffler     `json:"-"`
 }
 
 func (b Blackgo) MarshalJSON() ([]byte, error) {
 	return json.Marshal(map[string]any{
 		"ID":     b.ID,
 		"user":   b.UserDeck,
-		"dealer": b.dealerDeck,
+		"dealer": b.DealerDeck,
 		"winner": b.Winner,
 	})
 }
 
 func (b *Blackgo) GetDealerDeck() deck.Deck {
-	return b.dealerDeck
+	return b.DealerDeck
 }
 
 func (b *Blackgo) Start() {
@@ -57,23 +57,23 @@ func (b *Blackgo) Start() {
 	b.UserDeck = userDeck
 
 	dealerDeck, newDeck := newDeck.Deal(2)
-	b.dealerDeck = dealerDeck
+	b.DealerDeck = dealerDeck
 	b.d = newDeck
 	b.checkWinner()
 }
 
 func (b *Blackgo) checkWinner() {
-	if highestValidCombination(b.UserDeck) == highestValidCombination(b.dealerDeck) && b.Stood {
+	if highestValidCombination(b.UserDeck) == highestValidCombination(b.DealerDeck) && b.Stood {
 		b.Winner = TIE
 	} else if isOutOfPlay(b.UserDeck) {
 		b.Winner = DEALER
-	} else if isOutOfPlay(b.dealerDeck) && b.Stood {
+	} else if isOutOfPlay(b.DealerDeck) && b.Stood {
 		b.Winner = USER
 	} else if checkBlackGo(b.UserDeck) {
 		b.Winner = USER
-	} else if highestValidCombination(b.UserDeck) > highestValidCombination(b.dealerDeck) && b.Stood {
+	} else if highestValidCombination(b.UserDeck) > highestValidCombination(b.DealerDeck) && b.Stood {
 		b.Winner = USER
-	} else if highestValidCombination(b.UserDeck) < highestValidCombination(b.dealerDeck) && b.Stood {
+	} else if highestValidCombination(b.UserDeck) < highestValidCombination(b.DealerDeck) && b.Stood {
 		b.Winner = DEALER
 	} else {
 		b.Winner = NOONE
@@ -94,13 +94,13 @@ func (b *Blackgo) Hit() error {
 
 func (b *Blackgo) Stand() {
 	b.Stood = true
-	if highestValidCombination(b.dealerDeck) < 17 {
+	if highestValidCombination(b.DealerDeck) < 17 {
 		for {
 			newCard, newDeck := b.d.Deal(1)
-			b.dealerDeck = append(b.dealerDeck, newCard...)
+			b.DealerDeck = append(b.DealerDeck, newCard...)
 			b.d = newDeck
 
-			if highestValidCombination(b.dealerDeck) >= 17 {
+			if highestValidCombination(b.DealerDeck) >= 17 {
 				break
 			}
 		}
@@ -110,7 +110,7 @@ func (b *Blackgo) Stand() {
 
 func (b Blackgo) DealerDeckAsString() string {
 	if b.Stood {
-		return b.dealerDeck.ToString()
+		return b.DealerDeck.ToString()
 	}
-	return b.dealerDeck[0].ToString()
+	return b.DealerDeck[0].ToString()
 }

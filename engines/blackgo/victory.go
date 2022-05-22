@@ -37,7 +37,7 @@ func allDeckSumCombinations(d deck.Deck) []int {
 	})
 
 	ace_variations := generateAceVariations(len(aces))
-	others_sum := utils.Sum(utils.Map(others, func(t dTypes.Card) int { return MinInt(int(t.Number), 10) }), 0)
+	others_sum := utils.Sum(utils.Map(others, func(t dTypes.Card) int { return MinInt(int(t.Number.Value()), 10) }), 0)
 
 	return utils.Map(ace_variations, func(t int) int { return t + others_sum })
 }
