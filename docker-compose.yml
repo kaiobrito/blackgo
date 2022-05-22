@@ -1,5 +1,12 @@
 version: "3.4"
 services:
+  db:
+    image: postgres:14-alpine
+    platform: linux/arm64/v8
+    environment:
+      POSTGRES_PASSWORD: secret
+    ports:
+      - 5432:5432
   game:
     build:
       context: .
@@ -9,4 +16,8 @@ services:
       - ./:/app/
     ports:
       - 8080:8080
+    links:
+      - db
+    env_file:
+      - .env
     command: go run blackgo/game/api
