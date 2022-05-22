@@ -1,8 +1,8 @@
 package main
 
 import (
-	"blackgo/api/controllers"
 	"blackgo/engine"
+	"blackgo/game/api/controllers"
 	"encoding/json"
 	"io"
 	"net/http"

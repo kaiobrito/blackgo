@@ -3,7 +3,7 @@ go 1.18
 // Apps
 use (
 	./apps/cli
-	./apps/api
+	./apps/game
 )
 
 // Packages

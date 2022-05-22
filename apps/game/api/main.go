@@ -11,9 +11,9 @@ import (
 	swaggerfiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 
-	controllers "blackgo/api/controllers"
+	controllers "blackgo/game/api/controllers"
 
-	docs "blackgo/api/docs"
+	docs "blackgo/game/api/docs"
 )
 
 // @title           Swagger Example API

@@ -5,6 +5,8 @@ services:
       context: .
       dockerfile: Dockerfile
       target: builder
+    volumes:
+      - ./:/app/
     ports:
       - 8080:8080
-    command: go run blackgo/api
+    command: go run blackgo/game/api

@@ -7,7 +7,7 @@ ADD ./apps apps/
 ADD ./engines engines/
 ADD ./pkg pkg/
 
-RUN CGO_ENABLED=0 GOOS=linux go build blackgo/api
+RUN CGO_ENABLED=0 GOOS=linux go build blackgo/game/api
 
 FROM alpine:latest as api
 WORKDIR /root/

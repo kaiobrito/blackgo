@@ -1,4 +1,4 @@
-module blackgo/api
+module blackgo/game
 
 go 1.18
 
