@@ -2,7 +2,7 @@ package main
 
 import (
 	"blackgo/engine"
-	"blackgo/game/api/controllers"
+	"blackgo/game/repository"
 	"encoding/json"
 	"io"
 	"net/http"
@@ -26,9 +26,7 @@ func perfomRequest(method string, path string, body io.Reader) *httptest.Respons
 
 func setupSuite(tb testing.TB) func(tb testing.TB) {
 	return func(tb testing.TB) {
-		for k := range controllers.Games {
-			delete(controllers.Games, k)
-		}
+		repository.DeleteAll()
 	}
 }
 
@@ -54,8 +52,8 @@ func TestNewGameEndpoint(t *testing.T) {
 	w := perfomRequest("POST", "/api/v1/game", nil)
 	assert.Equal(t, w.Code, http.StatusCreated)
 
-	key := reflect.ValueOf(controllers.Games).MapKeys()[0]
-	game := controllers.Games[key.String()]
+	key := reflect.ValueOf(repository.GetAllGames()).MapKeys()[0]
+	game := repository.GetGameById(key.String())
 
 	expected, _ := json.Marshal(game)
 	assert.Equal(t, string(expected), w.Body.String())
@@ -65,7 +63,7 @@ func TestGetGame(t *testing.T) {
 	teardownSuite := setupSuite(t)
 	defer teardownSuite(t)
 
-	game := controllers.CreateGame()
+	game := repository.CreateGame()
 
 	w := perfomRequest("GET", "/api/v1/game/"+game.ID, nil)
 	assert.Equal(t, w.Code, http.StatusOK)
@@ -77,7 +75,7 @@ func TestAccessUnknownGame(t *testing.T) {
 	teardownSuite := setupSuite(t)
 	defer teardownSuite(t)
 
-	assert.Equal(t, len(controllers.Games), 0)
+	assert.Equal(t, len(repository.GetAllGames()), 0)
 	w := perfomRequest("GET", "/api/v1/game/1231", nil)
 	assert.Equal(t, w.Code, http.StatusNotFound)
 }
@@ -92,13 +90,12 @@ func TestHit(t *testing.T) {
 	defer teardownSuite(t)
 
 	// Create the game
-	game := engine.NewBlackgoGame()
-	game.Start()
-	controllers.Games["1231"] = &game
+	game := repository.CreateGame()
 	assert.Equal(t, len(game.UserDeck), 2)
 
-	w := perfomRequest("POST", "/api/v1/game/1231/hit", nil)
+	w := perfomRequest("POST", "/api/v1/game/"+game.ID+"/hit", nil)
 	assert.Equal(t, w.Code, http.StatusOK)
+	game = repository.GetGameById(game.ID)
 	assert.Equal(t, len(game.UserDeck), 3)
 }
 
@@ -107,12 +104,10 @@ func TestHitAfterGameIsOver(t *testing.T) {
 	defer teardownSuite(t)
 
 	// Create the game
-	game := engine.NewBlackgoGame()
-	game.Start()
+	game := repository.CreateGame()
 	game.Stand()
-	controllers.Games["1231"] = &game
 
-	w := perfomRequest("POST", "/api/v1/game/1231/hit", nil)
+	w := perfomRequest("POST", "/api/v1/game/"+game.ID+"/hit", nil)
 	assert.Equal(t, w.Code, http.StatusBadRequest)
 }
 
@@ -121,12 +116,12 @@ func TestStand(t *testing.T) {
 	defer teardownSuite(t)
 
 	// Create the game
-	game := engine.NewBlackgoGame()
-	game.Start()
-	controllers.Games["1231"] = &game
+	game := repository.CreateGame()
 	assert.Equal(t, game.Winner, engine.NOONE)
 
-	w := perfomRequest("POST", "/api/v1/game/1231/stand", nil)
+	w := perfomRequest("POST", "/api/v1/game/"+game.ID+"/stand", nil)
 	assert.Equal(t, w.Code, http.StatusOK)
+
+	game = repository.GetGameById(game.ID)
 	assert.NotEqual(t, game.Winner, engine.NOONE)
 }

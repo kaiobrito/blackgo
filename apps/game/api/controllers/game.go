@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"blackgo/engine/exceptions"
+	"blackgo/game/repository"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -15,7 +16,7 @@ import (
 // @Success  201
 // @Router   /game [post]
 func NewGame(c *gin.Context) {
-	game := CreateGame()
+	game := repository.CreateGame()
 	c.JSON(http.StatusCreated, game)
 }
 
@@ -30,7 +31,7 @@ func NewGame(c *gin.Context) {
 // @Router   /game/{id} [get]
 func GameDetail(c *gin.Context) {
 	id := c.Param("id")
-	game := Games[id]
+	game := repository.GetGameById(id)
 	if game == nil {
 		c.JSON(http.StatusNotFound, gin.H{
 			"code":    "page_not_found",
@@ -54,7 +55,7 @@ func GameDetail(c *gin.Context) {
 // @Router   /game/{id}/hit [post]
 func Hit(c *gin.Context) {
 	id := c.Param("id")
-	game := Games[id]
+	game := repository.GetGameById(id)
 	if game == nil {
 		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{
 			"code":    "page_not_found",
@@ -86,7 +87,7 @@ func Hit(c *gin.Context) {
 // @Router   /game/{id}/stand [post]
 func Stand(c *gin.Context) {
 	id := c.Param("id")
-	game := Games[id]
+	game := repository.GetGameById(id)
 	if game == nil {
 		c.JSON(http.StatusNotFound, gin.H{
 			"code":    "page_not_found",
