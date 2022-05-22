@@ -73,6 +73,7 @@ func Hit(c *gin.Context) {
 		}
 		return
 	}
+	repository.SaveGame(game)
 	c.JSON(http.StatusOK, game)
 }
 
@@ -96,5 +97,6 @@ func Stand(c *gin.Context) {
 		return
 	}
 	game.Stand()
+	repository.SaveGame(game)
 	c.JSON(http.StatusOK, game)
 }
