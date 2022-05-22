@@ -46,7 +46,7 @@ func TestJson(t *testing.T) {
 
 	expected := map[string]any{
 		"ID": game.ID,
-		"user": []map[string]string{
+		"user": []map[string]any{
 			{
 				"number": string(cTypes.CA),
 				"suit":   string(cTypes.Spades),
@@ -56,7 +56,7 @@ func TestJson(t *testing.T) {
 				"suit":   string(cTypes.Spades),
 			},
 		},
-		"dealer": []map[string]string{
+		"dealer": []map[string]any{
 			{
 				"suit":   string(cTypes.Spades),
 				"number": string(cTypes.C2),
@@ -66,11 +66,22 @@ func TestJson(t *testing.T) {
 				"number": string(cTypes.C3),
 			},
 		},
-		"winner": NOONE,
+		"winner": float64(NOONE),
+		"stood":  false,
 	}
-	expectedData, _ := json.Marshal(expected)
 
-	assert.Equal(t, string(expectedData), string(data))
+	expectedBytes, err := json.Marshal(expected)
+	assert.Nil(t, err)
+
+	var gameData map[string]any
+	err = json.Unmarshal(expectedBytes, &gameData)
+	assert.Nil(t, err)
+
+	var expectedData map[string]any
+	err = json.Unmarshal(data, &expectedData)
+	assert.Nil(t, err)
+
+	assert.Equal(t, expectedData, gameData)
 }
 
 func TestHit(t *testing.T) {

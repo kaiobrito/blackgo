@@ -3,7 +3,6 @@ package engine
 import (
 	"blackgo/deck"
 	"blackgo/engine/exceptions"
-	"encoding/json"
 )
 
 type BlackGoWinner int64
@@ -36,15 +35,6 @@ type Blackgo struct {
 	Winner     BlackGoWinner `json:"winner" `
 	Stood      bool          `json:"stood" `
 	Shuffler   IShuffler     `json:"-"`
-}
-
-func (b Blackgo) MarshalJSON() ([]byte, error) {
-	return json.Marshal(map[string]any{
-		"ID":     b.ID,
-		"user":   b.UserDeck,
-		"dealer": b.DealerDeck,
-		"winner": b.Winner,
-	})
 }
 
 func (b *Blackgo) GetDealerDeck() deck.Deck {
