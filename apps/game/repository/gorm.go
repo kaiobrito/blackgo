@@ -57,13 +57,14 @@ func fromGame(game engine.Blackgo) GormBlackgo {
 }
 
 func (g GormBlackgo) toBlackgo() *engine.Blackgo {
-	return &engine.Blackgo{
-		ID:         g.ID.String(),
-		UserDeck:   deck.Deck(g.UserDeck),
-		DealerDeck: deck.Deck(g.DealerDeck),
-		Winner:     g.Winner,
-		Stood:      g.Stood,
-	}
+	game := engine.CreateBlackgoWithDecks(deck.Deck(g.UserDeck), deck.Deck(g.DealerDeck))
+	game.ID = g.ID.String()
+	game.Winner = g.Winner
+	game.Stood = g.Stood
+	game.Shuffler = engine.DefaultShuffler()
+	game.Shuffle()
+
+	return game
 }
 
 type GormGameRepository struct {
@@ -96,7 +97,6 @@ func (repository GormGameRepository) SaveGame(game *engine.Blackgo) {
 func (repository GormGameRepository) GetGameById(id string) *engine.Blackgo {
 	var game GormBlackgo
 	repository.db.First(&game, "id", id)
-	fmt.Println(game)
 
 	return game.toBlackgo()
 }
