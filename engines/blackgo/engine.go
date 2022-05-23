@@ -41,7 +41,7 @@ type Blackgo struct {
 
 func CreateBlackgoWithDecks(uDeck deck.Deck, DeDeck deck.Deck) *Blackgo {
 	remainingDeck := utils.Filter(deck.GenerateDeck(), func(card dTypes.Card) bool {
-		return uDeck.Contains(card) || DeDeck.Contains(card)
+		return !(uDeck.Contains(card) || DeDeck.Contains(card))
 	})
 
 	return &Blackgo{

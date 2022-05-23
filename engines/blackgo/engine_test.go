@@ -260,3 +260,21 @@ func TestShuffler(t *testing.T) {
 		t.Errorf("Deck not shuffled")
 	}
 }
+
+func TestCreateBlackgoWithDecks(t *testing.T) {
+	uDeck := deck.Deck{
+		cTypes.NewCard(cTypes.Spades, cTypes.C10),
+		cTypes.NewCard(cTypes.Hearts, cTypes.C10),
+	}
+	DeDeck := deck.Deck{
+		cTypes.NewCard(cTypes.Clubs, cTypes.C10),
+		cTypes.NewCard(cTypes.Diamonds, cTypes.C10),
+	}
+	game := CreateBlackgoWithDecks(uDeck, DeDeck)
+	for _, card := range uDeck {
+		assert.False(t, game.d.Contains(card), "Card "+card.ToString()+" shouldn't be here")
+	}
+	for _, card := range DeDeck {
+		assert.False(t, game.d.Contains(card), "Card "+card.ToString()+" shouldn't be here")
+	}
+}

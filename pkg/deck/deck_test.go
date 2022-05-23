@@ -74,3 +74,12 @@ func TestUnmarshal(t *testing.T) {
 	assert.Nil(t, err)
 	assert.Equal(t, d, result)
 }
+func TestContains(t *testing.T) {
+	expected := cTypes.NewCard(cTypes.Spades, cTypes.CA)
+	d := Deck{
+		expected,
+		cTypes.NewCard(cTypes.Spades, cTypes.C1),
+	}
+	assert.True(t, d.Contains(expected))
+	assert.False(t, d.Contains(cTypes.NewCard(cTypes.Clubs, cTypes.C1)))
+}
