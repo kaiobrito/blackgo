@@ -2,7 +2,9 @@ package engine
 
 import (
 	"blackgo/deck"
+	dTypes "blackgo/deck/types"
 	"blackgo/engine/exceptions"
+	"blackgo/utils"
 )
 
 type BlackGoWinner int64
@@ -37,12 +39,24 @@ type Blackgo struct {
 	Shuffler   IShuffler     `json:"-"`
 }
 
+func CreateBlackgoWithDecks(uDeck deck.Deck, DeDeck deck.Deck) *Blackgo {
+	remainingDeck := utils.Filter(deck.GenerateDeck(), func(card dTypes.Card) bool {
+		return uDeck.Contains(card) || DeDeck.Contains(card)
+	})
+
+	return &Blackgo{
+		DealerDeck: DeDeck,
+		UserDeck:   uDeck,
+		d:          remainingDeck,
+	}
+}
+
 func (b *Blackgo) GetDealerDeck() deck.Deck {
 	return b.DealerDeck
 }
 
 func (b *Blackgo) Start() {
-	b.d = b.Shuffler(b.d)
+	b.Shuffle()
 	userDeck, newDeck := b.d.Deal(2)
 	b.UserDeck = userDeck
 
@@ -50,6 +64,10 @@ func (b *Blackgo) Start() {
 	b.DealerDeck = dealerDeck
 	b.d = newDeck
 	b.checkWinner()
+}
+
+func (b *Blackgo) Shuffle() {
+	b.d = b.Shuffler(b.d)
 }
 
 func (b *Blackgo) checkWinner() {
