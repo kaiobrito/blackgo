@@ -9,6 +9,15 @@ import (
 // The Deck type refers to a slice of strings
 type Deck []cTypes.Card
 
+func (deck Deck) Contains(card cTypes.Card) bool {
+	for _, a := range deck {
+		if a == card {
+			return true
+		}
+	}
+	return false
+}
+
 func (deck Deck) Print() {
 	fmt.Println(deck.ToString())
 }
