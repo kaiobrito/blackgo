@@ -27,9 +27,31 @@ jobs:
           go test blackgo/game/api -race -covermode=atomic -coverprofile=coverage/api.out
           go test blackgo/utils -race -covermode=atomic -coverprofile=coverage/utils.out
 
-      - name: Upload coverage to Codecov
+      - name: Upload deck coverage to Codecov
         uses: codecov/codecov-action@v2
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          files: ./coverage/deck.out,./coverage/engine.out,./coverage/utils.out,./coverage/api.out
+          flags: deck
+          files: ./coverage/deck.out
+          verbose: true
+      - name: Upload engine coverage to Codecov
+        uses: codecov/codecov-action@v2
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          flags: engine
+          files: ./coverage/engine.out
+          verbose: true
+      - name: Upload utils coverage to Codecov
+        uses: codecov/codecov-action@v2
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          flags: engine
+          files: ./coverage/utils.out,./coverage/api.out
+          verbose: true
+      - name: Upload engine coverage to Codecov
+        uses: codecov/codecov-action@v2
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          flags: game_api
+          files: ./coverage/api.out
           verbose: true
