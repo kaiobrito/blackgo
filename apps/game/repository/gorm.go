@@ -3,53 +3,35 @@ package repository
 import (
 	"blackgo/deck"
 	"blackgo/engine"
-	"database/sql/driver"
 	"encoding/json"
-	"errors"
-	"fmt"
 	"os"
 	"time"
 
 	"github.com/google/uuid"
+	"gorm.io/datatypes"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
-type Deck deck.Deck
-
-func (d *Deck) Scan(value interface{}) error {
-	bytes, ok := value.([]byte)
-	if !ok {
-		return errors.New(fmt.Sprint("Failed to unmarshal JSONB value:", value))
-	}
-
-	result := Deck{}
-	err := json.Unmarshal(bytes, &result)
-	*d = result
-	return err
-}
-
-func (d Deck) Value() (driver.Value, error) {
-	bytes, err := json.Marshal(d)
-	return bytes, err
-}
-
 type GormBlackgo struct {
 	gorm.Model
 
-	ID         uuid.UUID  `gorm:"primaryKey"`
-	UserDeck   Deck       `gorm:"type:jsonb`
-	DealerDeck Deck       `gorm:"type:jsonb`
+	ID         uuid.UUID `gorm:"primaryKey"`
+	UserDeck   datatypes.JSON
+	DealerDeck datatypes.JSON
 	Finished   *time.Time `gorm:"index"`
 	Winner     engine.BlackGoWinner
 	Stood      bool
 }
 
 func fromGame(game engine.Blackgo) GormBlackgo {
+	ud, _ := json.Marshal(game.UserDeck)
+	dd, _ := json.Marshal(game.DealerDeck)
+
 	return GormBlackgo{
 		ID:         uuid.MustParse(game.ID),
-		UserDeck:   Deck(game.UserDeck),
-		DealerDeck: Deck(game.GetDealerDeck()),
+		UserDeck:   datatypes.JSON(ud),
+		DealerDeck: datatypes.JSON(dd),
 		Winner:     game.Winner,
 		Stood:      game.Stood,
 		Finished:   nil,
@@ -57,7 +39,12 @@ func fromGame(game engine.Blackgo) GormBlackgo {
 }
 
 func (g GormBlackgo) toBlackgo() *engine.Blackgo {
-	game := engine.CreateBlackgoWithDecks(deck.Deck(g.UserDeck), deck.Deck(g.DealerDeck))
+	var ud deck.Deck
+	json.Unmarshal([]byte(g.UserDeck.String()), &ud)
+	var dd deck.Deck
+	json.Unmarshal([]byte(g.UserDeck.String()), &dd)
+
+	game := engine.CreateBlackgoWithDecks(ud, dd)
 	game.ID = g.ID.String()
 	game.Winner = g.Winner
 	game.Stood = g.Stood
