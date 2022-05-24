@@ -91,7 +91,9 @@ func (repository GormGameRepository) CreateGame() *engine.Blackgo {
 
 func (repository GormGameRepository) SaveGame(game *engine.Blackgo) {
 	gorm_game := fromGame(*game)
-	repository.db.Save(&gorm_game)
+	if err := repository.db.Save(&gorm_game).Error; err != nil {
+		game = nil
+	}
 }
 
 func (repository GormGameRepository) GetGameById(id string) *engine.Blackgo {
