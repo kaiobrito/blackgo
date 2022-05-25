@@ -1,8 +1,12 @@
 package repository
 
-import "blackgo/engine"
+import (
+	"blackgo/engine"
+	"sync"
+)
 
 type InMemoryGameRepository struct {
+	mux   sync.Mutex
 	games map[string]*engine.Blackgo
 }
 
@@ -19,11 +23,16 @@ func (repository *InMemoryGameRepository) CreateGame() *engine.Blackgo {
 }
 
 func (repository *InMemoryGameRepository) SaveGame(game *engine.Blackgo) {
+	repository.mux.Lock()
 	repository.games[game.ID] = game
+	repository.mux.Unlock()
 }
 
 func (repository *InMemoryGameRepository) GetGameById(id string) *engine.Blackgo {
-	return repository.games[id]
+	repository.mux.Lock()
+	game := repository.games[id]
+	repository.mux.Unlock()
+	return game
 }
 
 func (repository *InMemoryGameRepository) GetAllGames() map[string]*engine.Blackgo {
@@ -31,5 +40,7 @@ func (repository *InMemoryGameRepository) GetAllGames() map[string]*engine.Black
 }
 
 func (repository *InMemoryGameRepository) DeleteAll() {
+	repository.mux.Lock()
 	repository.games = map[string]*engine.Blackgo{}
+	repository.mux.Unlock()
 }
