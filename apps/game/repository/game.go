@@ -36,4 +36,5 @@ func DeleteAll() {
 
 func init() {
 	repository = NewInMemoryRepository()
+	//repository = NewGormGameRepository()
 }
