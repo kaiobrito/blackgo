@@ -17,6 +17,12 @@ import (
 // @Router   /game [post]
 func NewGame(c *gin.Context) {
 	game := repository.CreateGame()
+	if game == nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"code": "error_creating_game",
+		})
+		return
+	}
 	c.JSON(http.StatusCreated, game)
 }
 
