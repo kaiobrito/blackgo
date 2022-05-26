@@ -43,7 +43,7 @@ func (r AMQPGameRepository) CreateGame() *engine.Blackgo {
 	}
 
 	err = messaging.Publish(r.ch, messaging.Message{
-		RoutingKey: "game.actions.create",
+		RoutingKey: "games.action.create",
 		Exchange:   "amq.fanout",
 		Body:       body,
 	})
