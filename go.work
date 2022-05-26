@@ -10,6 +10,7 @@ use (
 use (
 	./pkg/deck
 	./pkg/utils
+	./pkg/messaging
 )
 
 //Engines
