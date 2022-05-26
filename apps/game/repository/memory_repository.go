@@ -10,7 +10,7 @@ type InMemoryGameRepository struct {
 	games map[string]*engine.Blackgo
 }
 
-func NewInMemoryRepository() *InMemoryGameRepository {
+func NewInMemoryRepository() IGameRepository {
 	return &InMemoryGameRepository{games: make(map[string]*engine.Blackgo)}
 }
 

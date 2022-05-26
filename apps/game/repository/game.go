@@ -2,6 +2,8 @@ package repository
 
 import (
 	"blackgo/engine"
+	"log"
+	"os"
 )
 
 type IGameRepository interface {
@@ -34,7 +36,22 @@ func DeleteAll() {
 	repository.DeleteAll()
 }
 
+type RepositoryConstructor func() IGameRepository
+
 func init() {
-	repository = NewInMemoryRepository()
-	//repository = NewGormGameRepository()
+
+	REPOSITORIES := map[string]RepositoryConstructor{
+		"GORM":   NewGormGameRepository,
+		"AMQP":   NewAMQPGameRepository,
+		"MEMORY": NewInMemoryRepository,
+	}
+	rType := os.Getenv("REPOSITORY_TYPE")
+	constructor := REPOSITORIES[rType]
+	if constructor != nil {
+		log.Println("Starting with repository " + rType)
+		repository = constructor()
+	} else {
+		log.Println("fallback: Using in-memory repository")
+		repository = NewInMemoryRepository()
+	}
 }

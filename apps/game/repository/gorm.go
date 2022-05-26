@@ -58,7 +58,7 @@ type GormGameRepository struct {
 	db *gorm.DB
 }
 
-func NewGormGameRepository() *GormGameRepository {
+func NewGormGameRepository() IGameRepository {
 	dns := os.Getenv("DATABASE_DSN")
 	db, err := gorm.Open(postgres.Open(dns), &gorm.Config{})
 	if err != nil {
