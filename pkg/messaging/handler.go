@@ -26,7 +26,7 @@ func CreateConsumer(queue string, routingKey string, exchange string, handler Me
 func (handler ConsumerHandler) bind(ch *amqp091.Channel) error {
 	return ch.QueueBind(
 		handler.queue,
-		handler.routingKey,
+		handler.queue+"#",
 		handler.exchange,
 		false,
 		nil,
@@ -35,17 +35,17 @@ func (handler ConsumerHandler) bind(ch *amqp091.Channel) error {
 
 func (handler ConsumerHandler) start(ch *amqp091.Channel) error {
 	if err := handler.bind(ch); err != nil {
-		return nil
+		return err
 	}
 
 	msgs, err := ch.Consume(
-		handler.queue,      // queue
-		handler.routingKey, // consumer
-		true,               // auto-ack
-		false,              // exclusive
-		false,              // no-local
-		false,              // no-wait
-		nil,                // args
+		handler.queue,                        // queue
+		handler.queue+"."+handler.routingKey, // consumer
+		true,                                 // auto-ack
+		false,                                // exclusive
+		false,                                // no-local
+		false,                                // no-wait
+		nil,                                  // args
 	)
 
 	if err != nil {
@@ -57,5 +57,6 @@ func (handler ConsumerHandler) start(ch *amqp091.Channel) error {
 			handler.handler(d)
 		}
 	}()
+
 	return nil
 }
