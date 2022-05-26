@@ -23,7 +23,7 @@ func handleCreateGame(msg amqp.Delivery) {
 func Start(ch *amqp.Channel) error {
 	manager := messaging.NewManager(
 		[]messaging.ConsumerHandler{
-			messaging.CreateConsumer("games.action", "create", "amqp.fanout", handleCreateGame),
+			messaging.CreateConsumer("games.action", "create", "amq.fanout", handleCreateGame),
 		},
 	)
 
