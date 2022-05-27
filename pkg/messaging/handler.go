@@ -22,7 +22,7 @@ func CreateConsumer(queue Queue, handler MessageHandler) ConsumerHandler {
 func (handler ConsumerHandler) start(ch *amqp091.Channel) error {
 	msgs, err := ch.Consume(
 		handler.queue.Name,       // queue
-		handler.queue.FullPath(), // consumer
+		handler.queue.RoutingKey, // consumer
 		true,                     // auto-ack
 		false,                    // exclusive
 		false,                    // no-local
@@ -35,8 +35,8 @@ func (handler ConsumerHandler) start(ch *amqp091.Channel) error {
 	}
 
 	go func() {
-		for d := range msgs {
-			handler.handler(d)
+		for msg := range msgs {
+			handler.handler(msg)
 		}
 	}()
 
