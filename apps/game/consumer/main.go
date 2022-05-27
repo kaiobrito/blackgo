@@ -2,6 +2,7 @@ package main
 
 import (
 	"blackgo/game/consumer/handlers"
+	"blackgo/game/repository"
 	"log"
 	"os"
 
@@ -14,6 +15,8 @@ func failOnError(err error, msg string) {
 	}
 }
 
+var r repository.IGameRepository
+
 func main() {
 
 	BROKER_URL := os.Getenv("BROKER_URL")
@@ -25,7 +28,9 @@ func main() {
 	failOnError(err, "Failed to open a channel")
 	defer ch.Close()
 
-	err = handlers.Start(ch)
+	r = repository.NewInMemoryRepository()
+
+	err = handlers.Start(ch, &r)
 	failOnError(err, "Failed to start handlers")
 
 	log.Printf(" [*] Waiting for messages. To exit press CTRL+C")

@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"blackgo/engine"
+	"blackgo/game/repository"
 	"blackgo/messaging"
 	"encoding/json"
 	"log"
@@ -9,6 +10,7 @@ import (
 	amqp "github.com/rabbitmq/amqp091-go"
 )
 
+var repo repository.IGameRepository
 func handleCreateGame(msg amqp.Delivery) {
 	var game engine.Blackgo
 	err := json.Unmarshal(msg.Body, &game)
@@ -20,10 +22,12 @@ func handleCreateGame(msg amqp.Delivery) {
 	}
 }
 
-func Start(ch *amqp.Channel) error {
+
+func Start(ch *amqp.Channel, r *repository.IGameRepository) error {
+	repo = *r
 	manager := messaging.NewManager(
 		[]messaging.ConsumerHandler{
-			messaging.CreateConsumer("games.action", "create", "amq.fanout", handleCreateGame),
+			messaging.CreateConsumer(queues.GAMES_CREATE_QUEUE, handleCreateGame),
 		},
 	)
 
