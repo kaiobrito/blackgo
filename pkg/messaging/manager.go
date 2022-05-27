@@ -28,7 +28,7 @@ func (m Manager) Start(ch *amqp.Channel) error {
 func (m Manager) declareQueues(ch *amqp.Channel) error {
 	for _, handler := range m.handlers {
 		if err := configureConsumer(ch, handler); err != nil {
-			return nil
+			return err
 		}
 	}
 	return nil
