@@ -7,45 +7,27 @@ import (
 type MessageHandler func(amqp091.Delivery)
 
 type ConsumerHandler struct {
-	queue      string
-	exchange   string
-	routingKey string
+	queue Queue
 
 	handler MessageHandler
 }
 
-func CreateConsumer(queue string, routingKey string, exchange string, handler MessageHandler) ConsumerHandler {
+func CreateConsumer(queue Queue, handler MessageHandler) ConsumerHandler {
 	return ConsumerHandler{
-		queue:      queue,
-		routingKey: routingKey,
-		exchange:   exchange,
-		handler:    handler,
+		queue:   queue,
+		handler: handler,
 	}
-}
-
-func (handler ConsumerHandler) bind(ch *amqp091.Channel) error {
-	return ch.QueueBind(
-		handler.queue,
-		handler.queue+"#",
-		handler.exchange,
-		false,
-		nil,
-	)
 }
 
 func (handler ConsumerHandler) start(ch *amqp091.Channel) error {
-	if err := handler.bind(ch); err != nil {
-		return err
-	}
-
 	msgs, err := ch.Consume(
-		handler.queue,                        // queue
-		handler.queue+"."+handler.routingKey, // consumer
-		true,                                 // auto-ack
-		false,                                // exclusive
-		false,                                // no-local
-		false,                                // no-wait
-		nil,                                  // args
+		handler.queue.Name,       // queue
+		handler.queue.FullPath(), // consumer
+		true,                     // auto-ack
+		false,                    // exclusive
+		false,                    // no-local
+		false,                    // no-wait
+		nil,                      // args
 	)
 
 	if err != nil {
