@@ -26,7 +26,6 @@ func handleCreateGame(msg amqp.Delivery) {
 	} else {
 		log.Printf("Not able to parse message: %s", string(msg.Body))
 	}
-	msg.Ack(true)
 }
 
 func Start(ch *amqp.Channel, r *repository.IGameRepository) error {
