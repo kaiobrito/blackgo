@@ -2,26 +2,32 @@ package handlers
 
 import (
 	"blackgo/engine"
+	"blackgo/game/queues"
 	"blackgo/game/repository"
 	"blackgo/messaging"
 	"encoding/json"
+	"fmt"
 	"log"
 
 	amqp "github.com/rabbitmq/amqp091-go"
 )
 
 var repo repository.IGameRepository
+
 func handleCreateGame(msg amqp.Delivery) {
+	fmt.Println("handleCreateGame")
+
 	var game engine.Blackgo
 	err := json.Unmarshal(msg.Body, &game)
 
 	if err == nil {
 		log.Printf("Received a message: %s", string(msg.Body))
+		repo.SaveGame(&game)
 	} else {
 		log.Printf("Not able to parse message: %s", string(msg.Body))
 	}
+	msg.Ack(true)
 }
-
 
 func Start(ch *amqp.Channel, r *repository.IGameRepository) error {
 	repo = *r
