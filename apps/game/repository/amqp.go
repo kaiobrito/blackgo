@@ -5,6 +5,7 @@ import (
 	"blackgo/game/queues"
 	"blackgo/messaging"
 	"encoding/json"
+	"fmt"
 	"log"
 	"os"
 
@@ -60,7 +61,31 @@ func (r AMQPGameRepository) SaveGame(game *engine.Blackgo) {
 
 }
 func (r AMQPGameRepository) GetGameById(id string) *engine.Blackgo {
-	return nil
+	body, err := json.Marshal(map[string]string{
+		"ID": id,
+	})
+	if err != nil {
+		fmt.Println(err)
+		return nil
+	}
+	data, err := messaging.PublishAndConsume(r.ch, messaging.Message{
+		CorrelationId: uuid.NewString(),
+		Queue:         queues.GAMES_QUERY_QUEUE,
+		ReplyTo:       &queues.GAMES_GET_QUEUE,
+		Body:          body,
+	})
+
+	if err != nil {
+		fmt.Println(err)
+		return nil
+	}
+	var game engine.Blackgo
+	if err = json.Unmarshal(data, &game); err != nil {
+		fmt.Println(err)
+		return nil
+	}
+
+	return &game
 }
 func (r AMQPGameRepository) GetAllGames() map[string]*engine.Blackgo {
 	return nil
