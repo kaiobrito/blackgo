@@ -1,6 +1,8 @@
 package messaging
 
 import (
+	"fmt"
+
 	"github.com/rabbitmq/amqp091-go"
 )
 
@@ -19,25 +21,34 @@ func CreateConsumer(queue Queue, handler MessageHandler) ConsumerHandler {
 	}
 }
 
-func (handler ConsumerHandler) start(ch *amqp091.Channel) error {
+func SubscribeToQueue(ch *amqp091.Channel, q Queue) (<-chan amqp091.Delivery, error) {
 	msgs, err := ch.Consume(
-		handler.queue.Name,       // queue
-		handler.queue.RoutingKey, // consumer
-		true,                     // auto-ack
-		false,                    // exclusive
-		false,                    // no-local
-		false,                    // no-wait
-		nil,                      // args
+		q.Name,       // queue
+		q.RoutingKey, // consumer
+		true,         // auto-ack
+		false,        // exclusive
+		false,        // no-local
+		false,        // no-wait
+		nil,          // args
 	)
 
 	if err != nil {
-		return err
+		return nil, err
 	}
 
+	return msgs, nil
+}
+
+func (handler ConsumerHandler) start(ch *amqp091.Channel) error {
 	go func() {
+		msgs, err := SubscribeToQueue(ch, handler.queue)
+		if err != nil {
+			panic(err)
+		}
 		for msg := range msgs {
 			handler.handler(msg)
 		}
+		fmt.Println("Stopping handler")
 	}()
 
 	return nil
