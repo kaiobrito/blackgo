@@ -13,6 +13,7 @@ import (
 )
 
 var repo repository.IGameRepository
+var channel *amqp.Channel
 
 func handleCreateGame(msg amqp.Delivery) {
 	fmt.Println("handleCreateGame")
@@ -28,11 +29,35 @@ func handleCreateGame(msg amqp.Delivery) {
 	}
 }
 
+func handleGetById(msg amqp.Delivery) {
+	fmt.Println("handleGetById")
+	fmt.Println(string(msg.Body))
+
+	var body map[string]string
+	json.Unmarshal(msg.Body, &body)
+
+	game := repo.GetGameById(body["ID"])
+	response, _ := json.Marshal(game)
+
+	fmt.Println("handleGetById", game)
+
+	messaging.Publish(channel, messaging.Message{
+		CorrelationId: msg.CorrelationId,
+		Queue:         queues.GAMES_GET_QUEUE,
+		Body:          response,
+	})
+}
+
 func Start(ch *amqp.Channel, r *repository.IGameRepository) error {
 	repo = *r
+	channel = ch
 	manager := messaging.NewManager(
 		[]messaging.ConsumerHandler{
 			messaging.CreateConsumer(queues.GAMES_CREATE_QUEUE, handleCreateGame),
+			messaging.CreateConsumer(queues.GAMES_QUERY_QUEUE, handleGetById),
+		},
+		[]messaging.Queue{
+			queues.GAMES_GET_QUEUE,
 		},
 	)
 
