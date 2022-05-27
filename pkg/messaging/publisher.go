@@ -4,45 +4,27 @@ import (
 	"github.com/rabbitmq/amqp091-go"
 )
 
-// func PublishAndWait(ch *amqp091.Channel, message PublishWaitMessage, c chan []byte) error {
-// 	pm := message.Publish
-// 	pm.CorrelationId = message.CorrelationId
-// 	pm.ReplyTo = message.Receive.RoutingKey
+func PublishAndConsume(ch *amqp091.Channel, message Message) ([]byte, error) {
+	Publish(ch, message)
+	if message.ReplyTo != nil {
+		c := make(chan []byte)
+		go func() {
+			msg, err := SubscribeToQueue(ch, *message.ReplyTo, amqp091.Table{
+				"CorrelationId": message.CorrelationId,
+			})
 
-// 	Publish(ch, message.Publish)
+			if err != nil {
+				close(c)
+			}
+			data := <-msg
+			c <- data.Body
+		}()
 
-// 	err := ch.QueueBind(
-// 		message.Receive.ReplyTo,
-// 		message.CorrelationId,
-// 		message.Receive.Exchange,
-// 		false,
-// 		nil,
-// 	)
-// 	if err != nil {
-// 		return err
-// 	}
+		return <-c, nil
+	}
 
-// 	msgs, err := ch.Consume(
-// 		message.Receive.Exchange,
-// 		message.Receive.ReplyTo,
-// 		true,
-// 		false, false, false,
-// 		nil,
-// 	)
-
-// 	if err != nil {
-// 		return err
-// 	}
-
-// 	for msg := range msgs {
-// 		if msg.CorrelationId == message.CorrelationId {
-// 			fmt.Println(msg.Body)
-// 			break
-// 		}
-// 	}
-
-// 	return nil
-// }
+	return nil, nil
+}
 
 func Publish(ch *amqp091.Channel, message Message) error {
 	replyTo := ""
