@@ -2,11 +2,13 @@ package repository
 
 import (
 	"blackgo/engine"
+	"blackgo/game/queues"
 	"blackgo/messaging"
 	"encoding/json"
 	"log"
 	"os"
 
+	"github.com/google/uuid"
 	"github.com/rabbitmq/amqp091-go"
 )
 
@@ -43,9 +45,10 @@ func (r AMQPGameRepository) CreateGame() *engine.Blackgo {
 	}
 
 	err = messaging.Publish(r.ch, messaging.Message{
-		RoutingKey: "games.action.create",
-		Exchange:   "amq.fanout",
-		Body:       body,
+		CorrelationId: uuid.NewString(),
+		Queue:         queues.GAMES_CREATE_QUEUE,
+		ReplyTo:       nil,
+		Body:          body,
 	})
 	if err != nil {
 		return nil
