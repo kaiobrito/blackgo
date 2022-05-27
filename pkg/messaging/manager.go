@@ -1,16 +1,20 @@
 package messaging
 
 import (
+	"blackgo/utils"
+
 	amqp "github.com/rabbitmq/amqp091-go"
 )
 
 type Manager struct {
-	handlers []ConsumerHandler
+	handlers      []ConsumerHandler
+	relatedQueues []Queue
 }
 
-func NewManager(h []ConsumerHandler) *Manager {
+func NewManager(h []ConsumerHandler, q []Queue) *Manager {
 	return &Manager{
-		handlers: h,
+		handlers:      h,
+		relatedQueues: q,
 	}
 }
 
@@ -26,24 +30,29 @@ func (m Manager) Start(ch *amqp.Channel) error {
 }
 
 func (m Manager) declareQueues(ch *amqp.Channel) error {
-	for _, handler := range m.handlers {
-		if err := configureConsumer(ch, handler); err != nil {
+	queues := m.relatedQueues
+	hQueues := utils.Map(m.handlers, func(h ConsumerHandler) Queue { return h.queue })
+
+	queues = append(queues, hQueues...)
+
+	for _, q := range queues {
+		if err := configureQueue(ch, q); err != nil {
 			return err
 		}
 	}
 	return nil
 }
 
-func configureConsumer(ch *amqp.Channel, handler ConsumerHandler) error {
-	e := handler.queue.Exchange
+func configureQueue(ch *amqp.Channel, q Queue) error {
+	e := q.Exchange
 
 	if err := ch.ExchangeDeclare(e.Name, e.EType, e.Durable, false, false, false, nil); err != nil {
 		return err
 	}
 
 	_, err := ch.QueueDeclare(
-		handler.queue.Name,
-		handler.queue.Durable,
+		q.Name,
+		q.Durable,
 		false,
 		false,
 		false,
@@ -55,9 +64,9 @@ func configureConsumer(ch *amqp.Channel, handler ConsumerHandler) error {
 	}
 
 	return ch.QueueBind(
-		handler.queue.Name,
-		handler.queue.FullPath(),
-		handler.queue.Exchange.Name,
+		q.Name,
+		q.FullPath(),
+		q.Exchange.Name,
 		false,
 		nil,
 	)

@@ -21,7 +21,8 @@ func CreateConsumer(queue Queue, handler MessageHandler) ConsumerHandler {
 	}
 }
 
-func SubscribeToQueue(ch *amqp091.Channel, q Queue) (<-chan amqp091.Delivery, error) {
+func SubscribeToQueue(ch *amqp091.Channel, q Queue, table amqp091.Table) (<-chan amqp091.Delivery, error) {
+	fmt.Println("Subscribing to", q.FullPath())
 	msgs, err := ch.Consume(
 		q.Name,       // queue
 		q.RoutingKey, // consumer
@@ -29,7 +30,7 @@ func SubscribeToQueue(ch *amqp091.Channel, q Queue) (<-chan amqp091.Delivery, er
 		false,        // exclusive
 		false,        // no-local
 		false,        // no-wait
-		nil,          // args
+		table,        // args
 	)
 
 	if err != nil {
@@ -41,7 +42,8 @@ func SubscribeToQueue(ch *amqp091.Channel, q Queue) (<-chan amqp091.Delivery, er
 
 func (handler ConsumerHandler) start(ch *amqp091.Channel) error {
 	go func() {
-		msgs, err := SubscribeToQueue(ch, handler.queue)
+
+		msgs, err := SubscribeToQueue(ch, handler.queue, nil)
 		if err != nil {
 			panic(err)
 		}
