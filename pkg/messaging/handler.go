@@ -50,7 +50,7 @@ func (handler ConsumerHandler) start(ch *amqp091.Channel) error {
 		for msg := range msgs {
 			handler.handler(msg)
 		}
-		fmt.Println("Stopping handler")
+		fmt.Println("Stopping handler " + handler.queue.Name)
 	}()
 
 	return nil

@@ -3,9 +3,9 @@ package queues
 import "blackgo/messaging"
 
 // Exchanges
+var BLANK_EXCHANGE messaging.Exchange
 var GAMES_ACTION_EXCHANGE messaging.Exchange
 var GAMES_QUERY_EXCHANGE messaging.Exchange
-var GAMES_GET_EXCHANGE messaging.Exchange
 
 // Queues
 var GAMES_CREATE_QUEUE messaging.Queue
@@ -30,9 +30,9 @@ func init() {
 	}
 
 	GAMES_GET_QUEUE = messaging.Queue{
-		Name:       "games.get",
-		RoutingKey: "get_by_id",
-		Exchange:   GAMES_GET_EXCHANGE,
+		Name:       "amq.rabbitmq.reply-to",
+		RoutingKey: "get_game_by_id",
+		Exchange:   BLANK_EXCHANGE,
 		Durable:    false,
 	}
 }
@@ -48,9 +48,9 @@ func configExchanges() {
 		EType:   "direct",
 		Durable: false,
 	}
-	GAMES_GET_EXCHANGE = messaging.Exchange{
-		Name:    "games.get",
-		EType:   "headers",
+	BLANK_EXCHANGE = messaging.Exchange{
+		Name:    "",
+		EType:   "",
 		Durable: false,
 	}
 }

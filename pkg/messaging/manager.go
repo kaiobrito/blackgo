@@ -2,6 +2,7 @@ package messaging
 
 import (
 	"blackgo/utils"
+	"log"
 
 	amqp "github.com/rabbitmq/amqp091-go"
 )
@@ -42,14 +43,16 @@ func (m Manager) declareQueues(ch *amqp.Channel) error {
 	}
 	return nil
 }
-
-func configureQueue(ch *amqp.Channel, q Queue) error {
-	e := q.Exchange
-
+func declareExchange(ch *amqp.Channel, e Exchange) error {
+	log.Default().Println("Creating exchange " + e.Name)
 	if err := ch.ExchangeDeclare(e.Name, e.EType, e.Durable, false, false, false, nil); err != nil {
 		return err
 	}
+	return nil
+}
 
+func configureQueue(ch *amqp.Channel, q Queue) error {
+	log.Default().Println("Declaring queue " + q.Name)
 	_, err := ch.QueueDeclare(
 		q.Name,
 		q.Durable,
@@ -62,14 +65,21 @@ func configureQueue(ch *amqp.Channel, q Queue) error {
 	if err != nil {
 		return err
 	}
+	e := q.Exchange
+	if e.Name != "" {
+		if err := declareExchange(ch, e); err != nil {
+			return err
+		}
 
-	return ch.QueueBind(
-		q.Name,
-		q.FullPath(),
-		q.Exchange.Name,
-		false,
-		nil,
-	)
+		return ch.QueueBind(
+			q.Name,
+			q.FullPath(),
+			q.Exchange.Name,
+			false,
+			nil,
+		)
+	}
+	return nil
 }
 
 func (m Manager) startConsumers(ch *amqp.Channel) error {

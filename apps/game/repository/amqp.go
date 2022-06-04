@@ -51,6 +51,7 @@ func (r AMQPGameRepository) CreateGame() *engine.Blackgo {
 		ReplyTo:       nil,
 		Body:          body,
 	})
+	fmt.Println(err)
 	if err != nil {
 		return nil
 	}
