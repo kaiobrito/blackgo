@@ -28,7 +28,7 @@ func main() {
 	failOnError(err, "Failed to open a channel")
 	defer ch.Close()
 
-	r = repository.NewInMemoryRepository()
+	r = repository.NewGormGameRepository()
 
 	err = handlers.Start(ch, &r)
 	failOnError(err, "Failed to start handlers")
