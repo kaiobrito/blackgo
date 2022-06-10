@@ -22,15 +22,17 @@ func CreateConsumer(queue Queue, handler MessageHandler) ConsumerHandler {
 }
 
 func SubscribeToQueue(ch *amqp091.Channel, q Queue, table amqp091.Table) (<-chan amqp091.Delivery, error) {
-	fmt.Println("Subscribing to", q.FullPath())
+	correlationId := table["CorrelationId"]
+	fmt.Printf("Subscribing to %s with CorrelationID: %v\n", q.FullPath(), correlationId)
+
 	msgs, err := ch.Consume(
-		q.Name,       // queue
-		q.RoutingKey, // consumer
-		true,         // auto-ack
-		false,        // exclusive
-		false,        // no-local
-		false,        // no-wait
-		table,        // args
+		q.Name, // queue
+		"",     // consumer
+		true,   // auto-ack
+		false,  // exclusive
+		false,  // no-local
+		false,  // no-wait
+		table,  // args
 	)
 
 	if err != nil {
