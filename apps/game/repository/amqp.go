@@ -80,7 +80,7 @@ func (r AMQPGameRepository) GetGameById(id string) *engine.Blackgo {
 		RoutingKey:    queues.GAMES_QUERY_QUEUE.FullPath(),
 		CorrelationId: uuid.NewString(),
 		Body:          body,
-	}, queues.GAMES_GET_QUEUE)
+	})
 
 	if err != nil {
 		fmt.Println(err)
