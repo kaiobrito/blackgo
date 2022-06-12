@@ -11,6 +11,7 @@ type Queue struct {
 	Durable    bool
 	RoutingKey string
 	Exchange   Exchange
+	Exclusive  bool
 }
 
 func (q Queue) FullPath() string {
@@ -18,8 +19,9 @@ func (q Queue) FullPath() string {
 }
 
 type Message struct {
+	Exchange      string
 	CorrelationId string
-	Queue         Queue
-	ReplyTo       *Queue
+	RoutingKey    string
+	ReplyToName   *string
 	Body          []byte
 }
