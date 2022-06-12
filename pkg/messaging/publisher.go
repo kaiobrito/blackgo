@@ -31,6 +31,7 @@ func PublishAndConsume(ch *amqp091.Channel, message Message) ([]byte, error) {
 		fmt.Println("Error to create Queue", err)
 		close(c)
 	}
+	defer ch.QueueDelete(replyQueue.Name, false, false, true)
 
 	msgs, queue, err := CreateSubscription(ch, replyQueue, amqp091.Table{
 		"CorrelationId": message.CorrelationId,
