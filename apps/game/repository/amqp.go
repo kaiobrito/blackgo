@@ -14,7 +14,8 @@ import (
 )
 
 type AMQPGameRepository struct {
-	ch *amqp091.Channel
+	conn *amqp091.Connection
+	ch   *amqp091.Channel
 }
 
 func failOnError(err error, msg string) {
@@ -31,8 +32,13 @@ func NewAMQPGameRepository() IGameRepository {
 	ch, err := conn.Channel()
 	failOnError(err, "Failed to create channel")
 
+	go func() {
+		panic(<-conn.NotifyClose(make(chan *amqp091.Error)))
+	}()
+
 	return &AMQPGameRepository{
-		ch: ch,
+		conn: conn,
+		ch:   ch,
 	}
 }
 
