@@ -61,12 +61,7 @@ func configureQueue(ch *amqp.Channel, q Queue) (amqp.Queue, error) {
 	return queue, nil
 }
 
-func SubscribeToQueue(ch *amqp091.Channel, q Queue, table amqp091.Table) (<-chan amqp091.Delivery, amqp091.Queue, error) {
-
-	queue, err := configureQueue(ch, q)
-	if err != nil {
-		return nil, queue, err
-	}
+func CreateSubscription(ch *amqp091.Channel, queue amqp.Queue, table amqp091.Table) (<-chan amqp091.Delivery, amqp091.Queue, error) {
 
 	correlationId := table["CorrelationId"]
 	fmt.Printf("Subscribing to %s with CorrelationID: %v\n", queue.Name, correlationId)
@@ -86,6 +81,15 @@ func SubscribeToQueue(ch *amqp091.Channel, q Queue, table amqp091.Table) (<-chan
 	}
 
 	return msgs, queue, err
+}
+
+func SubscribeToQueue(ch *amqp091.Channel, q Queue, table amqp091.Table) (<-chan amqp091.Delivery, amqp091.Queue, error) {
+	queue, err := configureQueue(ch, q)
+	if err != nil {
+		return nil, queue, err
+	}
+
+	return CreateSubscription(ch, queue, table)
 }
 
 func (handler ConsumerHandler) start(ch *amqp091.Channel) error {

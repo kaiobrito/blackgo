@@ -7,13 +7,35 @@ import (
 	"github.com/rabbitmq/amqp091-go"
 )
 
-func PublishAndConsume(ch *amqp091.Channel, message Message, replyQueue Queue) ([]byte, error) {
+func GetExclusiveQueue(ch *amqp091.Channel) (amqp091.Queue, error) {
+	queue := Queue{
+		Name:       "",
+		RoutingKey: "",
+		Exchange: Exchange{
+			Name:    "",
+			EType:   "",
+			Durable: false,
+		},
+		Durable:   false,
+		Exclusive: true,
+	}
+	return configureQueue(ch, queue)
+}
+
+func PublishAndConsume(ch *amqp091.Channel, message Message) ([]byte, error) {
 	c := make(chan []byte)
 
-	msgs, queue, err := SubscribeToQueue(ch, replyQueue, amqp091.Table{
+	replyQueue, err := GetExclusiveQueue(ch)
+
+	if err != nil {
+		fmt.Println("Error to create Queue", err)
+		close(c)
+	}
+
+	msgs, queue, err := CreateSubscription(ch, replyQueue, amqp091.Table{
 		"CorrelationId": message.CorrelationId,
 	})
-	message.ReplyToName = &queue.Name
+	message.ReplyToName = &replyQueue.Name
 
 	if err != nil {
 		fmt.Println("Error on subscribing:"+queue.Name, err)
@@ -35,7 +57,7 @@ func PublishAndConsume(ch *amqp091.Channel, message Message, replyQueue Queue) (
 				fmt.Println("Different correlationId. Requeuing", msg.CorrelationId)
 			}
 		}
-		fmt.Print("Finish publish and consume")
+		fmt.Println("Finish publish and consume")
 	}()
 
 	return <-c, nil
