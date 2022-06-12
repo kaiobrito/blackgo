@@ -56,7 +56,6 @@ func Start(ch *amqp.Channel, r *repository.IGameRepository) error {
 			messaging.CreateConsumer(queues.GAMES_CREATE_QUEUE, handleCreateGame),
 			messaging.CreateConsumer(queues.GAMES_QUERY_QUEUE, handleGetById),
 		},
-		[]messaging.Queue{},
 	)
 
 	return manager.Start(ch)
