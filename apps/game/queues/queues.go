@@ -30,10 +30,11 @@ func init() {
 	}
 
 	GAMES_GET_QUEUE = messaging.Queue{
-		Name:       "amq.rabbitmq.reply-to",
-		RoutingKey: "get_game_by_id",
+		Name:       "",
+		RoutingKey: "",
 		Exchange:   BLANK_EXCHANGE,
 		Durable:    false,
+		Exclusive:  true,
 	}
 }
 
