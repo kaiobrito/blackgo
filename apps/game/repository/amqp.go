@@ -53,8 +53,7 @@ func (r AMQPGameRepository) CreateGame() *engine.Blackgo {
 
 	err = messaging.Publish(r.ch, messaging.Message{
 		CorrelationId: uuid.NewString(),
-		Queue:         queues.GAMES_CREATE_QUEUE,
-		ReplyTo:       nil,
+		RoutingKey:    queues.GAMES_CREATE_QUEUE.Name,
 		Body:          body,
 	})
 	fmt.Println(err)
@@ -75,12 +74,13 @@ func (r AMQPGameRepository) GetGameById(id string) *engine.Blackgo {
 		fmt.Println(err)
 		return nil
 	}
+
 	data, err := messaging.PublishAndConsume(r.ch, messaging.Message{
+		Exchange:      queues.GAMES_QUERY_QUEUE.Exchange.Name,
+		RoutingKey:    queues.GAMES_QUERY_QUEUE.FullPath(),
 		CorrelationId: uuid.NewString(),
-		Queue:         queues.GAMES_QUERY_QUEUE,
-		ReplyTo:       &queues.GAMES_GET_QUEUE,
 		Body:          body,
-	})
+	}, queues.GAMES_GET_QUEUE)
 
 	if err != nil {
 		fmt.Println(err)

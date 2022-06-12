@@ -30,8 +30,7 @@ func handleCreateGame(msg amqp.Delivery) {
 }
 
 func handleGetById(msg amqp.Delivery) {
-	fmt.Println("handleGetById")
-	fmt.Println(string(msg.Body))
+	fmt.Println("handleGetById " + msg.CorrelationId)
 
 	var body map[string]string
 	json.Unmarshal(msg.Body, &body)
@@ -39,13 +38,16 @@ func handleGetById(msg amqp.Delivery) {
 	game := repo.GetGameById(body["ID"])
 	response, _ := json.Marshal(game)
 
-	fmt.Println("handleGetById", game)
+	fmt.Println("handleGetById", response)
 
-	messaging.Publish(channel, messaging.Message{
+	if err := messaging.Publish(channel, messaging.Message{
+		Exchange:      "",
+		RoutingKey:    msg.ReplyTo,
 		CorrelationId: msg.CorrelationId,
-		Queue:         queues.GAMES_GET_QUEUE,
 		Body:          response,
-	})
+	}); err != nil {
+		log.Fatalln(err)
+	}
 }
 
 func Start(ch *amqp.Channel, r *repository.IGameRepository) error {
